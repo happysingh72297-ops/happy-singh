@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>i_singhhappy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>HAPPY SINGH</h1>
+    <p>HAPPY CONNECTING WITH YOU</p>
+</header>
+
+<main>
+
+    <div class="admin-area">
+        <h2>Admin Panel</h2>
+        <button onclick="adminLogin()">Admin Login</button>
+        <button onclick="adminLogout()">Logout</button>
+    </div>
+
+   
+
+    <div class="admin-post">                                              <!-- yahan se naya block -->
+        <h2>Create New Post</h2>
+        <textarea id="postText" placeholder="Write your post..."></textarea>
+        <input type="file" id="postImage" accept="image/*">
+        <button id="publishBtn" onclick="createPost()">Publish Post</button>
+    </div>                                                                <!-- yahan tak -->
+
+    <h2>Welcome to Happy Singh</h2>
+    <p>Connect with everyone!</p>
+
+    <div id="posts"></div>
+
+
+
+<script type="module" src="script.js"></script>
+
+</body>
+</html>    
+   

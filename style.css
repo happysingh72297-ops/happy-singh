@@ -1,0 +1,93 @@
+/* Basic Website Design */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #fdfffffb;
+    color: #ff0000;
+}
+
+/* Website Header */
+header {
+    background: hsl(0, 100%, 50%);
+    color: #33ff00;
+    text-align: center;
+    padding: 30px 10px;
+    border-radius: 50px;
+    box-shadow: 0 2px 5000px #2bff00;
+}
+
+header h1 {
+    font-size: 100px;
+    letter-spacing: 1px;
+}
+
+header p {
+    margin-top: 8px;
+    font-size: 50px;
+}
+
+/* Main Section */
+main {
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 15px;
+    text-align: center;
+}
+
+main h2 {
+    margin-bottom: 10px;
+}
+
+/* Post Design */
+.post {
+    background: rgb(0, 247, 255);
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 50px;
+    box-shadow: 0 2px 50px #2bff00;
+}
+
+.post h3 {
+    margin-bottom: 10px;
+}
+
+.post p {
+    margin: 1px;
+}
+
+/* Buttons */
+button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    main {
+        margin: 15px auto;
+    }
+
+    header h1 {
+        font-size: 20px;
+    }
+}
+
+.post img {                    /* <-- yahan se naya code, media query ke baahar */
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 10px 0;
+    display: block;
+}
