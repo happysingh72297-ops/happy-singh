@@ -17,7 +17,6 @@ header {
     color: #33ff00;
     text-align: center;
     padding: 30px 10px;
-    border-radius: 50px;
     box-shadow: 0 2px 5000px #2bff00;
 }
 
@@ -85,9 +84,13 @@ button:hover {
     }
 }
 
-.post img {                    /* <-- yahan se naya code, media query ke baahar */
+.post img {
     max-width: 100%;
     border-radius: 12px;
     margin: 10px 0;
     display: block;
 }
+
+.post video, .post audio { width: 100%; margin: 10px 0; }
+.post iframe { width: 100%; aspect-ratio: 16/9; border: 0; border-radius: 12px; margin: 10px 0; }
+.post-link { display: block; margin: 8px 0; padding: 10px 12px; background: #fff; border-radius: 10px; color: #0645ad; text-decoration: underline; }

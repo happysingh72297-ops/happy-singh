@@ -37,7 +37,6 @@ const firebaseConfig = {
 // Admin UID
 const ADMIN_UID = "F3GYbmtWPDfionqf7BnBMohNATz2";
 
-
 // ---------------- Firebase Initialize ----------------
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -100,33 +99,52 @@ async function adminLogout() {
     }
 }
 
-// ---------------- Photo Upload (Cloudinary, free plan) ----------------
-const CLOUD_NAME = "avyiho22";      // Cloudinary Dashboard se Cloud name
-const UPLOAD_PRESET = "happysingh_unsigned";   // Cloudinary mein banaya hua Unsigned preset ka naam
-const MAX_IMAGE_MB = 5;
+// ---------------- File Upload (Cloudinary, free plan) ----------------
+const CLOUD_NAME = "avyiho22";
+const UPLOAD_PRESET = "happysingh_unsigned";
 
-async function uploadImage(file) {
-    if (!file.type.startsWith("image/")) {
-        throw new Error("Sirf photo (image) chuno.");
-    }
-    if (file.size > MAX_IMAGE_MB * 1024 * 1024) {
-        throw new Error("Photo " + MAX_IMAGE_MB + "MB se chhoti honi chahiye.");
+// Free plan bachane ke liye chhoti limits (MB mein). Zaroorat ho to badal sakte ho.
+const MAX_MB = { image: 5, audio: 20, video: 50, file: 10 };
+
+function getFileKind(file) {
+    if (file.type.startsWith("image/")) return "image";
+    if (file.type.startsWith("video/")) return "video";
+    if (file.type.startsWith("audio/")) return "audio";
+    return "file"; // pdf, apk, zip waghera
+}
+
+async function uploadFile(file) {
+    const kind = getFileKind(file);
+    const limit = MAX_MB[kind];
+
+    if (file.size > limit * 1024 * 1024) {
+        throw new Error("Is type ki file " + limit + "MB se chhoti honi chahiye.");
     }
 
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", UPLOAD_PRESET);
 
+    // "auto" se Cloudinary khud photo, video, audio ya file pehchan leta hai
     const res = await fetch(
-        "https://api.cloudinary.com/v1_1/" + CLOUD_NAME + "/image/upload",
+        "https://api.cloudinary.com/v1_1/" + CLOUD_NAME + "/auto/upload",
         { method: "POST", body: formData }
     );
     const data = await res.json();
 
     if (!res.ok || !data.secure_url) {
-        throw new Error((data.error && data.error.message) || "Photo upload fail ho gaya.");
+        throw new Error((data.error && data.error.message) || "File upload fail ho gayi.");
     }
-    return data.secure_url;
+    return { url: data.secure_url, kind: kind, name: file.name };
+}
+
+// Link ko saaf karo: sirf http ya https wale link allowed (javascript: jaise khatarnak link band)
+function cleanLink(text) {
+    try {
+        const u = new URL(String(text).trim());
+        if (u.protocol === "https:" || u.protocol === "http:") return u.href;
+    } catch (e) {}
+    return "";
 }
 
 // ---------------- Create Post ----------------
@@ -139,31 +157,44 @@ async function createPost() {
     }
 
     const postInput = document.getElementById("postText");
-    const imageInput = document.getElementById("postImage");
+    const fileInput = document.getElementById("postFile");
+    const linkInput = document.getElementById("postLink");
     const publishBtn = document.getElementById("publishBtn");
-    const text = postInput.value.trim();
-    const file = imageInput && imageInput.files[0];
 
-    if (!text && !file) {
-        alert("Write something or choose a photo first.");
+    const text = postInput.value.trim();
+    const file = fileInput && fileInput.files[0];
+    const rawLink = linkInput ? linkInput.value.trim() : "";
+    const link = rawLink ? cleanLink(rawLink) : "";
+
+    if (rawLink && !link) {
+        alert("Link sahi nahi hai. Wo https:// se shuru hona chahiye.");
+        return;
+    }
+
+    if (!text && !file && !link) {
+        alert("Kuch likho, file chuno ya link daalo.");
         return;
     }
 
     if (publishBtn) publishBtn.disabled = true;
 
     try {
-        let imageUrl = "";
-        if (file) imageUrl = await uploadImage(file);
+        let upload = null;
+        if (file) upload = await uploadFile(file);
 
         await addDoc(collection(db, "posts"), {
             text: text,
-            imageUrl: imageUrl,
+            linkUrl: link,
+            fileUrl: upload ? upload.url : "",
+            fileType: upload ? upload.kind : "",
+            fileName: upload ? upload.name : "",
             authorUid: user.uid,
             createdAt: serverTimestamp()
         });
 
         postInput.value = "";
-        if (imageInput) imageInput.value = "";
+        if (fileInput) fileInput.value = "";
+        if (linkInput) linkInput.value = "";
         alert("Post Published!");
     } catch (error) {
         alert("Post Error: " + error.message);
@@ -377,6 +408,73 @@ function sharePost(postId) {
     }
 }
 
+// ---------------- Post ka attachment dikhana ----------------
+function makeLink(url, label) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.textContent = label;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.className = "post-link";
+    return a;
+}
+
+function getYouTubeId(link) {
+    const m = link.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/);
+    return m ? m[1] : "";
+}
+
+function buildMedia(post) {
+    const box = document.createElement("div");
+    box.className = "post-media";
+
+    // Purani posts mein sirf imageUrl hota tha, isliye wo bhi chalta hai
+    const url = post.fileUrl || post.imageUrl || "";
+    const kind = post.fileType || (post.imageUrl ? "image" : "");
+
+    // Sirf Cloudinary ki files dikhao
+    if (url.startsWith("https://res.cloudinary.com/")) {
+        if (kind === "image") {
+            const img = document.createElement("img");
+            img.src = url.replace("/upload/", "/upload/f_auto,q_auto,w_800/");
+            img.alt = "Post photo";
+            img.loading = "lazy";
+            box.appendChild(img);
+        } else if (kind === "video") {
+            const video = document.createElement("video");
+            video.src = url;
+            video.controls = true;
+            video.preload = "metadata";
+            box.appendChild(video);
+        } else if (kind === "audio") {
+            const audio = document.createElement("audio");
+            audio.src = url;
+            audio.controls = true;
+            audio.preload = "metadata";
+            box.appendChild(audio);
+        } else {
+            box.appendChild(makeLink(url, "📎 " + (post.fileName || "File kholo")));
+        }
+    }
+
+    // Koi bhi link: YouTube ho to video dikhao, nahi to clickable link
+    const link = cleanLink(post.linkUrl || "");
+    if (link) {
+        const ytId = getYouTubeId(link);
+        if (ytId) {
+            const frame = document.createElement("iframe");
+            frame.src = "https://www.youtube.com/embed/" + ytId;
+            frame.loading = "lazy";
+            frame.allowFullscreen = true;
+            box.appendChild(frame);
+        } else {
+            box.appendChild(makeLink(link, "🔗 " + link));
+        }
+    }
+
+    return box.children.length ? box : null;
+}
+
 // ---------------- Render Posts ----------------
 const postsContainer = document.getElementById("posts");
 let currentPosts = [];
@@ -439,14 +537,9 @@ async function renderPosts() {
 
         postDiv.append(heading, paragraph);
 
-        // Sirf Cloudinary ki photo dikhao, aur chhota/optimized version load karo
-        if (post.imageUrl && post.imageUrl.startsWith("https://res.cloudinary.com/")) {
-            const img = document.createElement("img");
-            img.src = post.imageUrl.replace("/upload/", "/upload/f_auto,q_auto,w_800/");
-            img.alt = "Post photo";
-            img.loading = "lazy";
-            postDiv.appendChild(img);
-        }
+        // Photo, video, audio, file ya link dikhao
+        const media = buildMedia(post);
+        if (media) postDiv.appendChild(media);
 
         postDiv.append(likeButton, likeCount, commentButton, showButton, shareButton);
 
