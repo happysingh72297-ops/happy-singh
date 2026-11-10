@@ -251,6 +251,21 @@ input:focus, textarea:focus, select:focus {
   * { transition: none !important; }
 }
 
+/* ===== Logo ===== */
+.logo {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+  margin: 0 auto 10px;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .logo { width: 70px; height: 70px; }
+}
 
 /* ===== Logo ===== */
 .logo {
@@ -263,6 +278,27 @@ input:focus, textarea:focus, select:focus {
   margin: 0 auto 10px;
   display: block;
 }
+
+/* ===== Admin panel / Create post (glass) ===== */
+.admin-area,
+.admin-post {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 18px;
+  text-align: left;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.admin-area h2,
+.admin-post h2 { font-size: 18px; margin-bottom: 10px; }
+
+.admin-post textarea { min-height: 100px; resize: vertical; }
+
+.admin-post input[type="file"] { padding: 9px 12px; }
 
 @media (max-width: 600px) {
   .logo { width: 70px; height: 70px; }
