@@ -22,24 +22,22 @@
         <button onclick="adminLogout()">Logout</button>
     </div>
 
-   
-
-    <div class="admin-post">                                              <!-- yahan se naya block -->
+    <div class="admin-post">
         <h2>Create New Post</h2>
         <textarea id="postText" placeholder="Write your post..."></textarea>
-        <input type="file" id="postImage" accept="image/*">
+        <input type="file" id="postFile">
+        <input type="url" id="postLink" placeholder="Link (https://...)">
         <button id="publishBtn" onclick="createPost()">Publish Post</button>
-    </div>                                                                <!-- yahan tak -->
+    </div>
 
     <h2>Welcome to Happy Singh</h2>
     <p>Connect with everyone!</p>
 
     <div id="posts"></div>
 
-
+</main>
 
 <script type="module" src="script.js"></script>
 
 </body>
-</html>    
-   
+</html>
