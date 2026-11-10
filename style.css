@@ -250,9 +250,7 @@ input:focus, textarea:focus, select:focus {
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
-@media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; }
-}
+
 
 /* ===== Logo ===== */
 .logo {
