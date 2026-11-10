@@ -580,3 +580,33 @@ window.adminLogin = adminLogin;
 window.adminLogout = adminLogout;
 window.createPost = createPost;
 window.deletePost = deletePost;
+// ---------------- Button click sound ----------------
+let audioCtx;
+
+function playClick() {
+    try {
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+
+        const t = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(800, t);
+        osc.frequency.exponentialRampToValueAtTime(400, t + 0.08);
+
+        gain.gain.setValueAtTime(0.15, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + 0.1);
+    } catch (e) {}
+}
+
+// Har button par chalega (naye bane posts ke buttons par bhi)
+document.addEventListener("click", (e) => {
+    if (e.target.closest("button")) playClick();
+});

@@ -1,96 +1,252 @@
-/* Basic Website Design */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ===== HAPPY SINGH — Glassmorphism + Dark Mode (full) ===== */
+:root {
+  --glass: rgba(255, 255, 255, 0.08);
+  --glass-strong: rgba(255, 255, 255, 0.14);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --text: #f1f5f9;
+  --muted: #a5b4fc;
+  --primary: #8b5cf6;
+  --primary-2: #06b6d4;
+  --accent: #ec4899;
+  --danger: #ef4444;
+  --radius: 22px;
 }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
 
 body {
-    font-family: Arial, sans-serif;
-    background: #fdfffffb;
-    color: #ff0000;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(139, 92, 246, 0.45), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(6, 182, 212, 0.35), transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(236, 72, 153, 0.30), transparent 45%),
+    #0b1020;
+  background-attachment: fixed;
 }
 
-/* Website Header */
+/* ===== Header ===== */
 header {
-    background: hsl(0, 100%, 50%);
-    color: #33ff00;
-    text-align: center;
-    padding: 30px 10px;
-    box-shadow: 0 2px 5000px #2bff00;
+  text-align: center;
+  padding: 40px 16px 32px;
+  margin: 16px auto 0;
+  max-width: 900px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 header h1 {
-    font-size: 100px;
-    letter-spacing: 1px;
+  font-size: clamp(28px, 7vw, 54px);
+  font-weight: 800;
+  letter-spacing: 3px;
+  background: linear-gradient(90deg, #a78bfa, #22d3ee, #f472b6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 14px rgba(139, 92, 246, 0.55));
 }
 
 header p {
-    margin-top: 8px;
-    font-size: 50px;
+  margin-top: 8px;
+  font-size: clamp(13px, 3vw, 18px);
+  color: var(--muted);
+  letter-spacing: 1.5px;
 }
 
-/* Main Section */
+/* ===== Main ===== */
 main {
-    max-width: 700px;
-    margin: 30px auto;
-    padding: 15px;
-    text-align: center;
+  max-width: 720px;
+  margin: 28px auto;
+  padding: 0 16px 40px;
+  text-align: center;
 }
 
 main h2 {
-    margin-bottom: 10px;
+  margin-bottom: 14px;
+  font-size: 22px;
+  font-weight: 700;
 }
 
-/* Post Design */
+/* ===== Post card (glass) ===== */
 .post {
-    background: rgb(0, 247, 255);
-    padding: 20px;
-    margin-top: 20px;
-    border-radius: 50px;
-    box-shadow: 0 2px 50px #2bff00;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  padding: 20px;
+  margin-top: 22px;
+  border-radius: var(--radius);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  text-align: left;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-.post h3 {
-    margin-bottom: 10px;
+.post:hover {
+  transform: translateY(-3px);
+  border-color: rgba(167, 139, 250, 0.6);
+  box-shadow: 0 12px 40px rgba(139, 92, 246, 0.35);
 }
 
-.post p {
-    margin: 1px;
-}
+.post h3 { margin-bottom: 8px; font-size: 19px; letter-spacing: 0.5px; }
+.post p { margin: 6px 0; word-break: break-word; }
+.post small, .post .time { color: var(--muted); font-size: 12px; }
 
-/* Buttons */
-button {
-    padding: 10px 15px;
-    margin: 5px;
-    border: none;
-    border-radius: 7px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-button:hover {
-    opacity: 0.8;
-}
-
-/* Mobile Responsive */
-@media (max-width: 600px) {
-    main {
-        margin: 15px auto;
-    }
-
-    header h1 {
-        font-size: 20px;
-    }
-}
-
+/* ===== Media (photo / video / audio / iframe) ===== */
 .post img {
-    max-width: 100%;
-    border-radius: 12px;
-    margin: 10px 0;
-    display: block;
+  max-width: 100%;
+  border-radius: 14px;
+  margin: 10px 0;
+  display: block;
 }
 
-.post video, .post audio { width: 100%; margin: 10px 0; }
-.post iframe { width: 100%; aspect-ratio: 16/9; border: 0; border-radius: 12px; margin: 10px 0; }
-.post-link { display: block; margin: 8px 0; padding: 10px 12px; background: #fff; border-radius: 10px; color: #0645ad; text-decoration: underline; }
+.post video, .post audio {
+  width: 100%;
+  margin: 10px 0;
+  border-radius: 14px;
+}
+
+.post iframe {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: 0;
+  border-radius: 14px;
+  margin: 10px 0;
+}
+
+/* ===== Links / files (PDF, APK, any link) ===== */
+.post-link {
+  display: block;
+  margin: 8px 0;
+  padding: 11px 14px;
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: #67e8f9;
+  font-weight: 600;
+  text-decoration: none;
+  word-break: break-all;
+  transition: background 0.2s, color 0.2s;
+}
+
+.post-link:hover { background: var(--primary-2); color: #0b1020; }
+
+/* ===== Buttons (Like, Comment, View Comments, Share, Delete) ===== */
+button {
+  padding: 10px 18px;
+  margin: 5px 5px 5px 0;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(236, 72, 153, 0.5); }
+button:active { transform: scale(0.95); }
+button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid #67e8f9;
+  outline-offset: 2px;
+}
+
+/* Delete / Block User buttons */
+button.danger,
+.delete-btn,
+.block-btn,
+.post button[onclick*="delete" i],
+.post button[onclick*="block" i] {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+}
+
+/* ===== Inputs ===== */
+input, textarea, select {
+  width: 100%;
+  padding: 11px 14px;
+  margin: 6px 0;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: inherit;
+}
+
+input::placeholder, textarea::placeholder { color: #94a3b8; }
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-2);
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.3);
+}
+
+/* ===== Comments: BLACK box ===== */
+.comment,
+.comment-item,
+.comment-box,
+.comments > div,
+[id^="comments-"] > div {
+  background: #000 !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-top: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+
+/* Comment likhne wala input / textarea black */
+.post input,
+.post textarea {
+  background: #000 !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+}
+
+.post input::placeholder,
+.post textarea::placeholder { color: #9ca3af; }
+
+/* Comment ke andar ke chhote buttons */
+.comment button,
+.comment-item button,
+.comments button {
+  padding: 5px 12px;
+  margin: 0;
+  font-size: 12px;
+  border-radius: 999px;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.6); border-radius: 10px; }
+
+/* ===== Mobile ===== */
+@media (max-width: 600px) {
+  header { margin: 10px 10px 0; padding: 28px 12px 22px; border-radius: 18px; }
+  main { margin: 18px auto; padding: 0 12px 30px; }
+  .post { padding: 16px; border-radius: 18px; }
+  button { padding: 9px 14px; font-size: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
