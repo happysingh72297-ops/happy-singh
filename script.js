@@ -25,7 +25,7 @@ import {
 
 // ---------------- Firebase Configuration ----------------
 const firebaseConfig = {
-    apiKey: "AIzaSyA8kmNVPwfCh0Ya-exylf0ef1KiV9uJVqI",
+    apiKey: "AIzaSyDxqCYFA3owjUQSftvggFEGF6nHs2l9UqQ",
     authDomain: "happy--singh.firebaseapp.com",
     projectId: "happy--singh",
     storageBucket: "happy--singh.firebasestorage.app",
@@ -35,7 +35,7 @@ const firebaseConfig = {
 };
 
 // Admin UID
-const ADMIN_UID = "F3GYbmtWPDfionqf7BnBMohNATz2";
+const ADMIN_UID = "qbhBAoZVGBRDKFCMthXC0K2qoZs2";
 
 // ---------------- Firebase Initialize ----------------
 const app = initializeApp(firebaseConfig);
