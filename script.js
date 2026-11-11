@@ -35,7 +35,7 @@ const firebaseConfig = {
 };
 
 // Admin UID
-const ADMIN_UID = "qbhBAoZVGBRDKFCMthXC0K2qoZs2";
+const ADMIN_UID = "Cgr034JE6rgFsNikElALAp3CEPG3";
 
 // ---------------- Firebase Initialize ----------------
 const app = initializeApp(firebaseConfig);
