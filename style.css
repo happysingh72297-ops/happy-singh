@@ -303,3 +303,138 @@ input:focus, textarea:focus, select:focus {
 @media (max-width: 600px) {
   .logo { width: 70px; height: 70px; }
 }
+
+/* ===== Top menu: Ring Icon ===== */
+.nav {
+  position: sticky;
+  top: 8px;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: min(92%, 340px);
+  margin: 12px auto 0;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+}
+
+.nav a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  transition: color 0.25s;
+}
+
+.nav a svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.nav a:focus-visible { outline: 2px solid #67e8f9; outline-offset: 2px; }
+.nav a.active { color: #fff; }
+
+.nav a.active svg {
+  width: 42px;
+  height: 42px;
+  padding: 10px;
+  margin-top: -10px;
+  border: 2px solid #fff;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.55), rgba(236, 72, 153, 0.55));
+  box-shadow: 0 0 14px rgba(167, 139, 250, 0.8);
+}
+
+/* ===== Admin files page ===== */
+.lock { text-align: center; font-weight: 600; }
+
+.folder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 12px 0 24px;
+}
+
+.folder-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 18px 10px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.folder-icon { font-size: 38px; line-height: 1; }
+.folder-name { font-size: 14px; word-break: break-word; }
+
+.back-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.back-row h2 { flex: 1; margin: 0; font-size: 20px; text-align: left; }
+
+.status { margin-top: 6px; font-size: 13px; color: var(--muted); }
+
+.file-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding: 12px;
+  text-align: left;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.file-thumb { width: 52px; height: 52px; object-fit: cover; border-radius: 10px; }
+.file-icon { font-size: 34px; width: 52px; text-align: center; }
+.file-info { flex: 1; min-width: 120px; }
+.file-name { font-weight: 600; word-break: break-word; }
+.file-info small { color: var(--muted); }
+.file-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.file-actions button { margin: 0; padding: 7px 12px; font-size: 12px; }
+
+.file-btn {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 12px;
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  color: #67e8f9;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+button:disabled { opacity: 0.5; cursor: not-allowed; }

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Files | i_singhhappy</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="nav">
+    <a href="index.html"><svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a>
+    <a href="admin.html" class="active"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Files</span></a>
+</nav>
+
+<header>
+    <img src="logo.png" alt="Happy Singh logo" class="logo" onerror="this.style.display='none'">
+    <h1>ADMIN FILES</h1>
+    <p>FOLDERS AND FILES</p>
+</header>
+
+<main>
+
+    <div class="admin-area">
+        <h2>Admin Panel</h2>
+        <button id="loginBtn">Admin Login</button>
+        <button id="logoutBtn" style="display:none">Logout</button>
+    </div>
+
+    <div id="lockBox" class="admin-area lock">
+        🔒 Ye page sirf admin ke liye hai. Pehle Admin Login karo.
+    </div>
+
+    <div id="panel" style="display:none">
+
+        <!-- Folder list -->
+        <div id="folderListBox">
+            <div class="admin-area">
+                <h2>New Folder</h2>
+                <input type="text" id="folderName" maxlength="40" placeholder="Folder ka naam (jaise Photos, Notes, APK)">
+                <button id="createFolderBtn">📁 Folder banao</button>
+            </div>
+
+            <h2>Mere Folders</h2>
+            <div id="folders" class="folder-grid"></div>
+        </div>
+
+        <!-- Inside one folder -->
+        <div id="folderBox" style="display:none">
+            <div class="back-row">
+                <button id="backBtn">← Wapas</button>
+                <h2 id="folderTitle"></h2>
+                <button id="deleteFolderBtn" class="danger">🗑 Folder delete</button>
+            </div>
+
+            <div class="admin-area">
+                <h2>Files daalo</h2>
+                <input type="file" id="fileInput" multiple>
+                <button id="uploadBtn">⬆ Upload</button>
+                <p id="status" class="status"></p>
+            </div>
+
+            <div id="files"></div>
+        </div>
+
+    </div>
+
+</main>
+
+<script type="module" src="admin.js"></script>
+
+</body>
+</html>
