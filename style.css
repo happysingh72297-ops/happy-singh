@@ -304,7 +304,7 @@ input:focus, textarea:focus, select:focus {
   .logo { width: 70px; height: 70px; }
 }
 
-/* ===== Top menu: Ring Icon ===== */
+/* ===== Top menu: Ring Icon + shake ===== */
 .nav {
   position: sticky;
   top: 8px;
@@ -361,6 +361,28 @@ input:focus, textarea:focus, select:focus {
   border: 2px solid #fff;
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.55), rgba(236, 72, 153, 0.55));
   box-shadow: 0 0 14px rgba(167, 139, 250, 0.8);
+}
+
+/* Dabane par poora menu aur icon shake hota hai */
+.nav.shake { animation: navShake 0.45s; }
+.nav.shake a.active svg { animation: iconWiggle 0.45s; }
+
+@keyframes navShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
+@keyframes iconWiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-20deg) scale(1.1); }
+  75% { transform: rotate(20deg) scale(1.1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav.shake, .nav.shake a.active svg { animation: none; }
 }
 
 /* ===== Admin files page ===== */
@@ -438,3 +460,10 @@ input:focus, textarea:focus, select:focus {
 }
 
 button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ===== Public / Admin sections ===== */
+[hidden] { display: none !important; }
+
+.files-section { text-align: left; margin-bottom: 28px; }
+.files-section h2 { font-size: 20px; margin-bottom: 2px; }
+.sec-note { color: var(--muted); font-size: 13px; margin: 2px 0 12px; }

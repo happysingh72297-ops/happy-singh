@@ -34,7 +34,7 @@ const firebaseConfig = {
 
 const ADMIN_UID = "Cgr034JE6rgFsNikElALAp3CEPG3";
 const CLOUD_NAME = "avyiho22";
-const UPLOAD_PRESET = "happysingh_unsigned";
+const UPLOAD_PRESET = "happysingh_bheshkitaang";
 
 
 // Cloudinary free plan ke hisaab se limits (MB). Zaroorat ho to badlo.
@@ -52,10 +52,12 @@ function isAdmin() {
 }
 
 // ---------------- State ----------------
-let folders = [];
+let foldersPublic = [];
+let foldersAdmin = [];
 let files = [];
-let currentFolder = null;
-let unsubFolders = null;
+let currentFolder = null; // { id, name, section }
+let unsubPublic = null;
+let unsubAdmin = null;
 let unsubFiles = null;
 
 // ---------------- Admin login / logout ----------------
@@ -92,20 +94,23 @@ async function adminLogout() {
 function updateUI() {
     const admin = isAdmin();
 
-    $("lockBox").style.display = admin ? "none" : "block";
-    $("panel").style.display = admin ? "block" : "none";
-    $("logoutBtn").style.display = admin ? "inline-block" : "none";
-    $("loginBtn").style.display = admin ? "none" : "inline-block";
+    $("loginBtn").hidden = admin;
+    $("logoutBtn").hidden = !admin;
+    document.querySelectorAll(".admin-only").forEach((el) => { el.hidden = !admin; });
+
+    $("adminLock").hidden = admin;
+    $("adminBox").hidden = !admin;
 
     if (admin) {
-        if (!unsubFolders) startFolders();
+        if (!unsubAdmin) startFolders("admin");
     } else {
-        if (unsubFolders) { unsubFolders(); unsubFolders = null; }
-        if (unsubFiles) { unsubFiles(); unsubFiles = null; }
-        currentFolder = null;
-        folders = [];
-        files = [];
+        if (unsubAdmin) { unsubAdmin(); unsubAdmin = null; }
+        foldersAdmin = [];
+        if (currentFolder && currentFolder.section === "admin") closeFolder();
     }
+
+    renderFolders();
+    renderFiles();
 }
 
 onAuthStateChanged(auth, () => updateUI());
@@ -139,6 +144,10 @@ function setStatus(text) {
     $("status").textContent = text;
 }
 
+function byNewest(a, b) {
+    return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
+}
+
 // ---------------- Cloudinary upload ----------------
 async function uploadFile(file) {
     const kind = getFileKind(file);
@@ -165,21 +174,31 @@ async function uploadFile(file) {
 }
 
 // ---------------- Folders ----------------
-function startFolders() {
-    unsubFolders = onSnapshot(collection(db, "folders"), (snapshot) => {
-        folders = snapshot.docs
-            .map((d) => ({ id: d.id, ...d.data() }))
-            .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-        renderFolders();
-    }, (error) => {
-        console.error("Folders Loading Error:", error);
-    });
+// section = "public" (sabko dikhe) ya "admin" (sirf admin ko)
+function startFolders(section) {
+    const unsub = onSnapshot(
+        query(collection(db, "folders"), where("section", "==", section)),
+        (snapshot) => {
+            const list = snapshot.docs
+                .map((d) => ({ id: d.id, ...d.data() }))
+                .sort(byNewest);
+
+            if (section === "public") foldersPublic = list;
+            else foldersAdmin = list;
+
+            renderFolders();
+        },
+        (error) => console.error("Folders Loading Error (" + section + "):", error)
+    );
+
+    if (section === "public") unsubPublic = unsub;
+    else unsubAdmin = unsub;
 }
 
-async function createFolder() {
+async function createFolder(section, inputId) {
     if (!isAdmin()) return;
 
-    const input = $("folderName");
+    const input = $(inputId);
     const name = input.value.trim().slice(0, 40);
     if (!name) {
         alert("Folder ka naam likho.");
@@ -189,6 +208,7 @@ async function createFolder() {
     try {
         await addDoc(collection(db, "folders"), {
             name: name,
+            section: section,
             createdAt: serverTimestamp()
         });
         input.value = "";
@@ -197,18 +217,18 @@ async function createFolder() {
     }
 }
 
-function renderFolders() {
-    const box = $("folders");
+function renderGrid(list, boxId, emptyText) {
+    const box = $(boxId);
     box.replaceChildren();
 
-    if (!folders.length) {
+    if (!list.length) {
         const p = document.createElement("p");
-        p.textContent = "Abhi koi folder nahi hai. Upar se banao.";
+        p.textContent = emptyText;
         box.appendChild(p);
         return;
     }
 
-    folders.forEach((f) => {
+    list.forEach((f) => {
         const card = document.createElement("button");
         card.className = "folder-card";
         card.type = "button";
@@ -222,28 +242,38 @@ function renderFolders() {
         name.textContent = f.name;
 
         card.append(icon, name);
-        card.onclick = () => openFolder(f);
+        card.onclick = () => openFolder({ id: f.id, name: f.name, section: f.section });
         box.appendChild(card);
     });
+}
+
+function renderFolders() {
+    renderGrid(foldersPublic, "foldersPublic", "Abhi koi public folder nahi hai.");
+    renderGrid(foldersAdmin, "foldersAdmin", "Abhi koi admin folder nahi hai.");
 }
 
 function openFolder(folder) {
     currentFolder = folder;
     files = [];
 
-    $("folderListBox").style.display = "none";
-    $("folderBox").style.display = "block";
-    $("folderTitle").textContent = "📁 " + folder.name;
+    $("listBox").hidden = true;
+    $("folderBox").hidden = false;
+    $("folderTitle").textContent =
+        (folder.section === "public" ? "🌍 Public / " : "🔒 Admin / ") + folder.name;
     setStatus("");
     renderFiles();
 
     if (unsubFiles) unsubFiles();
     unsubFiles = onSnapshot(
-        query(collection(db, "files"), where("folderId", "==", folder.id)),
+        query(
+            collection(db, "files"),
+            where("folderId", "==", folder.id),
+            where("section", "==", folder.section)
+        ),
         (snapshot) => {
             files = snapshot.docs
                 .map((d) => ({ id: d.id, ...d.data() }))
-                .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                .sort(byNewest);
             renderFiles();
         },
         (error) => console.error("Files Loading Error:", error)
@@ -255,8 +285,8 @@ function closeFolder() {
     currentFolder = null;
     files = [];
 
-    $("folderBox").style.display = "none";
-    $("folderListBox").style.display = "block";
+    $("folderBox").hidden = true;
+    $("listBox").hidden = false;
 }
 
 async function deleteFolder() {
@@ -266,7 +296,11 @@ async function deleteFolder() {
 
     try {
         const snap = await getDocs(
-            query(collection(db, "files"), where("folderId", "==", currentFolder.id))
+            query(
+                collection(db, "files"),
+                where("folderId", "==", currentFolder.id),
+                where("section", "==", currentFolder.section)
+            )
         );
 
         const batch = writeBatch(db);
@@ -302,6 +336,7 @@ async function uploadFiles() {
 
             await addDoc(collection(db, "files"), {
                 folderId: currentFolder.id,
+                section: currentFolder.section,
                 name: up.name,
                 url: up.url,
                 kind: up.kind,
@@ -342,6 +377,8 @@ async function copyLink(url) {
 function renderFiles() {
     const box = $("files");
     box.replaceChildren();
+
+    if (!currentFolder) return;
 
     if (!files.length) {
         const p = document.createElement("p");
@@ -398,15 +435,19 @@ function renderFiles() {
         copy.textContent = "Copy link";
         copy.onclick = () => copyLink(f.url);
 
-        const del = document.createElement("button");
-        del.type = "button";
-        del.className = "danger";
-        del.textContent = "Delete";
-        del.onclick = () => deleteFile(f.id);
+        actions.append(open, copy);
 
-        actions.append(open, copy, del);
+        // Delete button sirf admin ko
+        if (isAdmin()) {
+            const del = document.createElement("button");
+            del.type = "button";
+            del.className = "danger";
+            del.textContent = "Delete";
+            del.onclick = () => deleteFile(f.id);
+            actions.appendChild(del);
+        }
+
         row.appendChild(actions);
-
         box.appendChild(row);
     });
 }
@@ -414,10 +455,351 @@ function renderFiles() {
 // ---------------- Buttons ----------------
 $("loginBtn").addEventListener("click", adminLogin);
 $("logoutBtn").addEventListener("click", adminLogout);
-$("createFolderBtn").addEventListener("click", createFolder);
+$("createFolderPublic").addEventListener("click", () => createFolder("public", "folderNamePublic"));
+$("createFolderAdmin").addEventListener("click", () => createFolder("admin", "folderNameAdmin"));
+$("folderNamePublic").addEventListener("keydown", (e) => { if (e.key === "Enter") createFolder("public", "folderNamePublic"); });
+$("folderNameAdmin").addEventListener("keydown", (e) => { if (e.key === "Enter") createFolder("admin", "folderNameAdmin"); });
 $("backBtn").addEventListener("click", closeFolder);
 $("deleteFolderBtn").addEventListener("click", deleteFolder);
 $("uploadBtn").addEventListener("click", uploadFiles);
-$("folderName").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") createFolder();
-});
+
+// ---------------- Start ----------------
+startFolders("public"); // public folders sabko dikhte hain (login ki zaroorat nahi)
+updateUI();
+
+(function () {
+    "use strict";
+
+    function $(id) { return document.getElementById(id); }
+    function load(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
+    function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+    // ---------- Tabs ----------
+    var tabs = document.querySelectorAll(".game-tabs button");
+    var panels = document.querySelectorAll(".game-panel");
+
+    function show(id) {
+        tabs.forEach(function (t) { t.classList.toggle("on", t.getAttribute("data-g") === id); });
+        panels.forEach(function (p) { p.hidden = p.id !== "g-" + id; });
+        if (id !== "snake") snakeStop();
+    }
+    tabs.forEach(function (t) {
+        t.addEventListener("click", function () { show(t.getAttribute("data-g")); });
+    });
+
+    // ---------- Online / Offline badge ----------
+    function net() {
+        var b = $("netBadge");
+        var on = navigator.onLine;
+        b.textContent = on ? "🟢 Online" : "🔴 Offline: games phir bhi chalenge";
+        b.className = "net " + (on ? "on" : "off");
+    }
+    window.addEventListener("online", net);
+    window.addEventListener("offline", net);
+    net();
+
+    // =====================================================
+    // 1. Tic Tac Toe (aap X, computer O)
+    // =====================================================
+    var tb, tOver, tScore = { w: 0, l: 0, d: 0 };
+    var LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+    function tWinner(b) {
+        for (var i = 0; i < LINES.length; i++) {
+            var l = LINES[i];
+            if (b[l[0]] && b[l[0]] === b[l[1]] && b[l[0]] === b[l[2]]) return b[l[0]];
+        }
+        return b.indexOf("") < 0 ? "draw" : null;
+    }
+
+    function tFind(mark) {
+        for (var i = 0; i < LINES.length; i++) {
+            var c = 0, e = -1;
+            LINES[i].forEach(function (x) {
+                if (tb[x] === mark) c++;
+                else if (tb[x] === "") e = x;
+            });
+            if (c === 2 && e > -1) return e;
+        }
+        return -1;
+    }
+
+    function tCpu() {
+        var m = tFind("O");
+        if (m < 0) m = tFind("X");
+        if (m < 0 && tb[4] === "") m = 4;
+        if (m < 0) {
+            var free = [];
+            tb.forEach(function (v, i) { if (!v) free.push(i); });
+            m = free[Math.floor(Math.random() * free.length)];
+        }
+        tb[m] = "O";
+    }
+
+    function tRender() {
+        var cells = $("tttBoard").children;
+        for (var i = 0; i < 9; i++) {
+            cells[i].textContent = tb[i];
+            cells[i].className = tb[i] === "X" ? "x" : (tb[i] === "O" ? "o" : "");
+        }
+        $("tttScore").textContent = "Jeet: " + tScore.w + " · Haar: " + tScore.l + " · Draw: " + tScore.d;
+    }
+
+    function tCheck() {
+        var r = tWinner(tb);
+        if (!r) return false;
+        tOver = true;
+        if (r === "X") { tScore.w++; $("tttInfo").textContent = "Aap jeet gaye! 🎉"; }
+        else if (r === "O") { tScore.l++; $("tttInfo").textContent = "Computer jeet gaya 😅"; }
+        else { tScore.d++; $("tttInfo").textContent = "Draw!"; }
+        return true;
+    }
+
+    function tReset() {
+        tb = ["", "", "", "", "", "", "", "", ""];
+        tOver = false;
+        $("tttInfo").textContent = "Aap X ho. Pehli chaal aapki.";
+        tRender();
+    }
+
+    (function () {
+        var board = $("tttBoard");
+        for (var i = 0; i < 9; i++) {
+            (function (i) {
+                var b = document.createElement("button");
+                b.type = "button";
+                b.setAttribute("aria-label", "Cell " + (i + 1));
+                b.addEventListener("click", function () {
+                    if (tOver || tb[i]) return;
+                    tb[i] = "X";
+                    if (!tCheck()) { tCpu(); tCheck(); }
+                    tRender();
+                });
+                board.appendChild(b);
+            })(i);
+        }
+        $("tttReset").addEventListener("click", tReset);
+        tReset();
+    })();
+
+    // =====================================================
+    // 2. Snake
+    // =====================================================
+    var cv = $("snakeCv"), cx = cv.getContext("2d");
+    var N = 15, S = 20;
+    var sn, dir, nd, food, sScore = 0, timer = null, alive = false;
+    var sBest = load("hs_snake_best", 0);
+    $("snakeBest").textContent = "Best: " + sBest;
+
+    function placeFood() {
+        do {
+            food = { x: Math.floor(Math.random() * N), y: Math.floor(Math.random() * N) };
+        } while (sn.some(function (p) { return p.x === food.x && p.y === food.y; }));
+    }
+
+    function draw() {
+        cx.fillStyle = "#0b1020";
+        cx.fillRect(0, 0, cv.width, cv.height);
+
+        cx.fillStyle = "#f43f5e";
+        cx.beginPath();
+        cx.arc(food.x * S + S / 2, food.y * S + S / 2, S / 2 - 3, 0, Math.PI * 2);
+        cx.fill();
+
+        sn.forEach(function (p, i) {
+            cx.fillStyle = i === 0 ? "#86efac" : "#22c55e";
+            cx.fillRect(p.x * S + 1, p.y * S + 1, S - 2, S - 2);
+        });
+    }
+
+    function snakeReset() {
+        sn = [{ x: 7, y: 7 }, { x: 6, y: 7 }, { x: 5, y: 7 }];
+        dir = { x: 1, y: 0 };
+        nd = dir;
+        sScore = 0;
+        placeFood();
+        draw();
+        $("snakeScore").textContent = "Score: 0";
+    }
+
+    function snakeStop() {
+        if (timer) { clearInterval(timer); timer = null; }
+        alive = false;
+    }
+
+    function snakeEnd() {
+        snakeStop();
+        if (sScore > sBest) { sBest = sScore; save("hs_snake_best", sBest); }
+        $("snakeBest").textContent = "Best: " + sBest;
+        $("snakeMsg").textContent = "Game over! Score: " + sScore + ". Phir se Start dabao.";
+    }
+
+    function tick() {
+        dir = nd;
+        var h = { x: sn[0].x + dir.x, y: sn[0].y + dir.y };
+
+        if (h.x < 0 || h.y < 0 || h.x >= N || h.y >= N ||
+            sn.some(function (p) { return p.x === h.x && p.y === h.y; })) {
+            snakeEnd();
+            return;
+        }
+
+        sn.unshift(h);
+        if (h.x === food.x && h.y === food.y) {
+            sScore++;
+            $("snakeScore").textContent = "Score: " + sScore;
+            placeFood();
+        } else {
+            sn.pop();
+        }
+        draw();
+    }
+
+    function snakeStart() {
+        snakeStop();
+        snakeReset();
+        alive = true;
+        $("snakeMsg").textContent = "Khelo! Swipe ya arrow se mudo.";
+        timer = setInterval(tick, 140);
+    }
+
+    function setDir(dx, dy) {
+        if (!alive) return;
+        if (dx + dir.x === 0 && dy + dir.y === 0) return; // ulta nahi mud sakte
+        nd = { x: dx, y: dy };
+    }
+
+    var DIRS = { u: [0, -1], d: [0, 1], l: [-1, 0], r: [1, 0] };
+    document.querySelectorAll(".dpad button").forEach(function (b) {
+        b.addEventListener("click", function () {
+            var d = DIRS[b.getAttribute("data-d")];
+            setDir(d[0], d[1]);
+        });
+    });
+
+    document.addEventListener("keydown", function (e) {
+        if ($("g-snake").hidden) return;
+        var map = { ArrowUp: "u", ArrowDown: "d", ArrowLeft: "l", ArrowRight: "r" };
+        if (map[e.key]) {
+            e.preventDefault();
+            var d = DIRS[map[e.key]];
+            setDir(d[0], d[1]);
+        }
+    });
+
+    var tx = 0, ty = 0;
+    cv.addEventListener("touchstart", function (e) {
+        tx = e.touches[0].clientX; ty = e.touches[0].clientY;
+    }, { passive: true });
+    cv.addEventListener("touchend", function (e) {
+        var dx = e.changedTouches[0].clientX - tx;
+        var dy = e.changedTouches[0].clientY - ty;
+        if (Math.max(Math.abs(dx), Math.abs(dy)) < 20) return;
+        if (Math.abs(dx) > Math.abs(dy)) setDir(dx > 0 ? 1 : -1, 0);
+        else setDir(0, dy > 0 ? 1 : -1);
+    }, { passive: true });
+
+    $("snakeStart").addEventListener("click", snakeStart);
+    snakeReset();
+
+    // =====================================================
+    // 3. Memory Match
+    // =====================================================
+    var EMO = ["🍎", "🍌", "🍇", "🍒", "🍉", "🥝"];
+    var deck, first, lock, moves, matched;
+
+    function memBest() {
+        var b = load("hs_mem_best", 0);
+        $("memBest").textContent = b ? "Best: " + b + " chaal" : "";
+    }
+
+    function memReset() {
+        deck = EMO.concat(EMO);
+        for (var i = deck.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = deck[i]; deck[i] = deck[j]; deck[j] = t;
+        }
+        first = null; lock = false; moves = 0; matched = 0;
+        $("memInfo").textContent = "Jodiyan milao. Chaal: 0";
+
+        var board = $("memBoard");
+        board.replaceChildren();
+        deck.forEach(function (v, i) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.setAttribute("aria-label", "Card " + (i + 1));
+            b.addEventListener("click", function () { flip(b, i); });
+            board.appendChild(b);
+        });
+        memBest();
+    }
+
+    function flip(btn, i) {
+        if (lock || btn.classList.contains("up") || btn.classList.contains("done")) return;
+        btn.classList.add("up");
+        btn.textContent = deck[i];
+
+        if (!first) { first = { b: btn, i: i }; return; }
+
+        moves++;
+        $("memInfo").textContent = "Jodiyan milao. Chaal: " + moves;
+        var a = first;
+        first = null;
+
+        if (deck[a.i] === deck[i]) {
+            a.b.classList.add("done"); btn.classList.add("done");
+            matched++;
+            if (matched === EMO.length) {
+                $("memInfo").textContent = "Jeet gaye! 🎉 " + moves + " chaal mein.";
+                var best = load("hs_mem_best", 0);
+                if (!best || moves < best) save("hs_mem_best", moves);
+                memBest();
+            }
+        } else {
+            lock = true;
+            setTimeout(function () {
+                a.b.classList.remove("up"); a.b.textContent = "";
+                btn.classList.remove("up"); btn.textContent = "";
+                lock = false;
+            }, 700);
+        }
+    }
+
+    $("memReset").addEventListener("click", memReset);
+    memReset();
+
+    // =====================================================
+    // 4. Tap Speed (10 second)
+    // =====================================================
+    var tapN = 0, tapT = 0, tapRun = false, tapTimer = null;
+    var tapBestV = load("hs_tap_best", 0);
+
+    function tapShowBest() {
+        $("tapBest").textContent = tapBestV ? "Best: " + tapBestV + " tap" : "";
+    }
+
+    $("tapBtn").addEventListener("click", function () {
+        var btn = $("tapBtn");
+
+        if (!tapRun) {
+            tapRun = true; tapN = 0; tapT = 10;
+            $("tapInfo").textContent = "Time: 10 second";
+            tapTimer = setInterval(function () {
+                tapT--;
+                $("tapInfo").textContent = "Time: " + tapT + " second";
+                if (tapT <= 0) {
+                    clearInterval(tapTimer);
+                    tapRun = false;
+                    $("tapInfo").textContent = "Time up! Aapne " + tapN + " tap kiye.";
+                    btn.textContent = "Phir se shuru karo";
+                    if (tapN > tapBestV) { tapBestV = tapN; save("hs_tap_best", tapBestV); }
+                    tapShowBest();
+                }
+            }, 1000);
+        }
+
+        tapN++;
+        if (tapRun) btn.textContent = "Tap: " + tapN;
+    });
+    tapShowBest();
+})();

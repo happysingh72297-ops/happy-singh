@@ -101,7 +101,7 @@ async function adminLogout() {
 
 // ---------------- File Upload (Cloudinary, free plan) ----------------
 const CLOUD_NAME = "avyiho22";
-const UPLOAD_PRESET = "happysingh_unsigned";
+const UPLOAD_PRESET = "happysingh_bheshkitaang";
 
 // Free plan bachane ke liye chhoti limits (MB mein). Zaroorat ho to badal sakte ho.
 const MAX_MB = { image: 5, audio: 20, video: 50, file: 10 };
