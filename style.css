@@ -1,8 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap");
 
-/* ===== HAPPY SINGH — Newspaper edition =====
+/* ===== HAPPY SINGH — Newspaper edition, on frosted glass =====
    Fonts: Old Standard TT (masthead, headlines) + Source Serif 4 (text).
-   Newsprint paper, one spot red. Dark "night edition" follows the phone setting. */
+   Newsprint paper with soft colour behind frosted-glass panels, one spot red.
+   Dark "night edition" follows the phone setting. */
 
 :root {
   color-scheme: light dark;
@@ -13,6 +14,21 @@
   --ink-soft: #55514a;
   --accent: #a31d16;
   --link: #1d3b5a;
+
+  /* glass: translucent panels over the soft colour behind the page */
+  --edge: rgba(28, 27, 24, 0.5);
+  --glass: rgba(255, 255, 255, 0.38);
+  --glass-strong: rgba(255, 255, 255, 0.6);
+  --glass-nav: rgba(235, 232, 222, 0.62);
+  --glass-input: rgba(255, 255, 255, 0.55);
+  --glass-hi: rgba(255, 255, 255, 0.75);
+  --glass-shadow: 0 10px 32px rgba(28, 27, 24, 0.14);
+  /* background patches: chai (tea), white, grey */
+  --blob-1: rgba(160, 110, 58, 0.45);   /* chai, deep */
+  --blob-2: rgba(255, 255, 255, 0.90);  /* white */
+  --blob-3: rgba(120, 120, 120, 0.32);  /* grey */
+  --blob-4: rgba(196, 152, 98, 0.38);   /* chai, light */
+  --blob-5: rgba(255, 255, 255, 0.80);  /* white */
 
   /* page width and side margin: header and main both use these, so their edges always line up */
   --gutter: 14px;
@@ -30,6 +46,29 @@
     --ink-soft: #aaa59a;
     --accent: #e5675c;
     --link: #9bbbe0;
+
+    --edge: rgba(232, 228, 216, 0.35);
+    --glass: rgba(255, 255, 255, 0.06);
+    --glass-strong: rgba(255, 255, 255, 0.12);
+    --glass-nav: rgba(29, 28, 25, 0.6);
+    --glass-input: rgba(255, 255, 255, 0.08);
+    --glass-hi: rgba(255, 255, 255, 0.14);
+    --glass-shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
+    --blob-1: rgba(150, 100, 55, 0.38);
+    --blob-2: rgba(255, 255, 255, 0.10);
+    --blob-3: rgba(170, 170, 170, 0.16);
+    --blob-4: rgba(185, 140, 90, 0.26);
+    --blob-5: rgba(255, 255, 255, 0.07);
+  }
+}
+
+/* People who asked their device for less transparency get solid panels */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass: var(--paper-2);
+    --glass-strong: var(--paper-2);
+    --glass-nav: var(--paper);
+    --glass-input: var(--paper);
   }
 }
 
@@ -58,6 +97,29 @@ body {
 
 ::selection { background: var(--ink); color: var(--paper); }
 
+/* chai, white and grey patches behind everything, so the glass has something to frost */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 48% 34% at 8% 6%, var(--blob-1), transparent 72%),
+    radial-gradient(ellipse 42% 30% at 86% 10%, var(--blob-2), transparent 72%),
+    radial-gradient(ellipse 34% 40% at 96% 52%, var(--blob-3), transparent 72%),
+    radial-gradient(ellipse 40% 34% at 6% 58%, var(--blob-5), transparent 72%),
+    radial-gradient(ellipse 30% 26% at 55% 48%, var(--blob-3), transparent 72%),
+    radial-gradient(ellipse 52% 36% at 30% 100%, var(--blob-4), transparent 72%),
+    radial-gradient(ellipse 36% 30% at 90% 96%, var(--blob-2), transparent 72%);
+}
+
+/* frosted panels */
+.nav, header, .admin-area, .admin-post, #posts, .folder-card, .file-row {
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+}
+
 [hidden] { display: none !important; }
 
 /* ===== Section bar (nav) ===== */
@@ -69,8 +131,8 @@ body {
   justify-content: center;
   gap: 30px;
   padding: 6px 12px 0;
-  background: var(--paper);
-  border-bottom: 1px solid var(--ink);
+  background: var(--glass-nav);
+  border-bottom: 1px solid var(--edge);
 }
 
 .nav a {
@@ -105,10 +167,12 @@ body {
 header {
   width: min(100% - 2 * var(--gutter), var(--page));
   margin: 18px auto 0;
-  padding: 18px 0 14px;
+  padding: 18px 16px 14px;
   text-align: center;
+  background: var(--glass);
   border-top: 7px solid var(--ink);
   border-bottom: 4px double var(--ink);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-hi);
 }
 
 .logo {
@@ -173,9 +237,9 @@ main > p {
 .admin-post {
   margin: 8px 4px 26px;
   padding: 16px;
-  background: var(--paper-2);
-  border: 1px solid var(--ink);
-  box-shadow: 0 0 0 3px var(--paper), 0 0 0 4px var(--ink);
+  background: var(--glass);
+  border: 1px solid var(--edge);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-hi);
 }
 
 .admin-area h2,
@@ -191,13 +255,39 @@ main > p {
 .admin-post textarea { min-height: 110px; resize: vertical; }
 
 /* ===== Articles (posts) ===== */
-/* Phone: 1 column. Tablet, laptop, desktop: 4 columns. */
+/* Front-page grid. Phone: 2 columns. Tablet, laptop, desktop: 4 columns.
+   The admin picks each post's size (data-size set by script.js):
+   tablet and up: s = 1 column, m = 2 columns, l = 3 columns, xl = full width.
+   phone: s = half width, m / l / xl = full width. */
+#posts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  background: var(--glass);
+  border-right: 1px solid var(--edge);
+  border-bottom: 1px solid var(--edge);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-hi);
+}
+
+/* Phone: bigger posts take the whole row (tablet and up override this below) */
+.post[data-size="m"],
+.post[data-size="l"],
+.post[data-size="xl"] { grid-column: 1 / -1; }
+
 @media (min-width: 601px) {
   #posts {
-    column-count: 4;
-    column-gap: 24px;
-    column-rule: 1px solid var(--ink);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-flow: dense; /* smaller posts fill the gaps beside bigger ones */
   }
+
+  .post[data-size="m"]  { grid-column: span 2; font-size: 16px; }
+  .post[data-size="l"]  { grid-column: span 3; font-size: 17px; line-height: 1.65; }
+  .post[data-size="xl"] { grid-column: 1 / -1; font-size: 18px; line-height: 1.65; }
+
+  .post[data-size="xl"] h3 + p { max-width: 75ch; }
+
+  .post[data-size="l"] h3 + p::first-letter,
+  .post[data-size="xl"] h3 + p::first-letter { font-size: 3.6em; padding: 6px 9px 0 0; }
 
   /* columns are narrow, so the story text and buttons get a little smaller */
   .post { font-size: 15px; line-height: 1.55; }
@@ -206,9 +296,9 @@ main > p {
 }
 
 .post {
-  break-inside: avoid;
-  padding: 16px 0 20px;
-  border-top: 1px solid var(--ink);
+  padding: 16px 16px 20px;
+  border-top: 1px solid var(--edge);
+  border-left: 1px solid var(--edge);
 }
 
 .post h3 {
@@ -275,8 +365,8 @@ main > p {
   display: block;
   margin: 10px 0;
   padding: 10px 12px;
-  background: var(--paper-2);
-  border: 1px solid var(--ink);
+  background: var(--glass-strong);
+  border: 1px solid var(--edge);
   border-left: 5px solid var(--accent);
   color: var(--link);
   font-weight: 600;
@@ -291,7 +381,7 @@ main > p {
 button {
   margin: 4px 6px 4px 0;
   padding: 7px 13px;
-  background: transparent;
+  background: var(--glass-strong);
   color: var(--ink);
   border: 1px solid var(--ink);
   border-radius: 0;
@@ -333,9 +423,9 @@ input, textarea, select {
   width: 100%;
   margin: 6px 0;
   padding: 10px 12px;
-  background: var(--paper);
+  background: var(--glass-input);
   color: var(--ink);
-  border: 1px solid var(--ink);
+  border: 1px solid var(--edge);
   border-radius: 0;
   font-family: var(--body);
   font-size: 16px;
@@ -349,6 +439,17 @@ input:focus, textarea:focus, select:focus {
 }
 
 input[type="file"] { padding: 8px 10px; }
+
+/* Post size picker (admin only) */
+.size-select { width: auto; max-width: 100%; margin: 4px 0; padding: 4px 8px; font-size: 13px; }
+
+.admin-post label {
+  display: block;
+  margin-top: 6px;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-soft);
+}
 
 /* ===== Letters to the editor (comments) =====
    script.js sets inline styles on these; !important is needed to override them. */
@@ -421,8 +522,9 @@ input[type="file"] { padding: 8px 10px; }
   gap: 6px;
   margin: 0;
   padding: 18px 10px;
-  background: var(--paper-2);
-  border: 1px solid var(--ink);
+  background: var(--glass);
+  border: 1px solid var(--edge);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-hi);
 }
 
 .folder-card:hover { background: var(--ink); color: var(--paper); }
@@ -461,9 +563,12 @@ input[type="file"] { padding: 8px 10px; }
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
-  padding: 12px 0;
+  margin-top: 8px;
+  padding: 12px;
   text-align: left;
-  border-bottom: 1px dotted var(--ink-soft);
+  background: var(--glass);
+  border: 1px solid var(--edge);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-hi);
 }
 
 .file-thumb {
@@ -499,7 +604,7 @@ input[type="file"] { padding: 8px 10px; }
 ::-webkit-scrollbar-thumb { background: var(--ink-soft); }
 
 /* ===== Screen sizes =====
-   Phone  : up to 600px   -> 1 column, big tap targets
+   Phone  : up to 600px   -> 2 columns, big tap targets
    Tablet : 601 - 899px   -> 4 columns, wider margins
    Laptop : 900 - 1199px  -> 4 columns (set in the Articles section)
    Wide   : 1200px and up -> 4 columns, wider page */
@@ -508,10 +613,18 @@ input[type="file"] { padding: 8px 10px; }
 @media (max-width: 600px) {
   body { font-size: 16px; }
   .nav { gap: 22px; }
-  header { margin-top: 10px; padding: 14px 0 12px; }
+  header { margin-top: 10px; padding: 14px 12px 12px; }
   .logo { width: 60px; height: 60px; }
   main { margin-top: 18px; padding-bottom: 40px; }
   main > h2 { font-size: 19px; }
+
+  /* two narrow columns: smaller text and buttons so everything fits */
+  .post { padding: 10px 10px 14px; font-size: 14px; line-height: 1.5; }
+  .post[data-size="m"], .post[data-size="l"], .post[data-size="xl"] { padding: 14px; font-size: 16px; line-height: 1.6; }
+  .post h3 { font-size: 11px; letter-spacing: 0.1em; }
+  .post h3 + p::first-letter { font-size: 2.4em; padding: 3px 6px 0 0; }
+  .post > button { margin: 3px 4px 3px 0; padding: 4px 8px; font-size: 11.5px; min-height: 34px; }
+  .post p[id^="like-count-"] { margin-right: 6px; font-size: 12px; }
 
   .admin-area, .admin-post { margin-left: 3px; margin-right: 3px; padding: 14px; }
 
