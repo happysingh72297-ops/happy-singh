@@ -1,397 +1,416 @@
-/* ===== HAPPY SINGH — Glassmorphism + Dark Mode (full) ===== */
+@import url("https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap");
+
+/* ===== HAPPY SINGH — Newspaper edition =====
+   Fonts: Old Standard TT (masthead, headlines) + Source Serif 4 (text).
+   Newsprint paper, one spot red. Dark "night edition" follows the phone setting. */
+
 :root {
-  --glass: rgba(255, 255, 255, 0.08);
-  --glass-strong: rgba(255, 255, 255, 0.14);
-  --glass-border: rgba(255, 255, 255, 0.18);
-  --text: #f1f5f9;
-  --muted: #a5b4fc;
-  --primary: #8b5cf6;
-  --primary-2: #06b6d4;
-  --accent: #ec4899;
-  --danger: #ef4444;
-  --radius: 22px;
+  color-scheme: light dark;
+
+  --paper: #ebe8de;
+  --paper-2: #e1ddd0;
+  --ink: #1c1b18;
+  --ink-soft: #55514a;
+  --accent: #a31d16;
+  --link: #1d3b5a;
+
+  /* page width and side margin: header and main both use these, so their edges always line up */
+  --gutter: 14px;
+  --page: 1000px;
+
+  --head: "Old Standard TT", "Bodoni MT", Didot, Georgia, "Times New Roman", serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1d1c19;
+    --paper-2: #262521;
+    --ink: #e8e4d8;
+    --ink-soft: #aaa59a;
+    --accent: #e5675c;
+    --link: #9bbbe0;
+  }
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 64px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+img, video, iframe, audio { max-width: 100%; }
+main, .post, .file-info, .folder-card { min-width: 0; overflow-wrap: break-word; }
 
 body {
-  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
-  color: var(--text);
-  line-height: 1.6;
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink);
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 15% 10%, rgba(139, 92, 246, 0.45), transparent 40%),
-    radial-gradient(circle at 85% 20%, rgba(6, 182, 212, 0.35), transparent 40%),
-    radial-gradient(circle at 50% 100%, rgba(236, 72, 153, 0.30), transparent 45%),
-    #0b1020;
-  background-attachment: fixed;
+  background-color: var(--paper);
+  /* faint paper grain */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* ===== Header ===== */
-header {
-  text-align: center;
-  padding: 40px 16px 32px;
-  margin: 16px auto 0;
-  max-width: 900px;
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-}
+::selection { background: var(--ink); color: var(--paper); }
 
-header h1 {
-  font-size: clamp(28px, 7vw, 54px);
-  font-weight: 800;
-  letter-spacing: 3px;
-  background: linear-gradient(90deg, #a78bfa, #22d3ee, #f472b6);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 14px rgba(139, 92, 246, 0.55));
-}
+[hidden] { display: none !important; }
 
-header p {
-  margin-top: 8px;
-  font-size: clamp(13px, 3vw, 18px);
-  color: var(--muted);
-  letter-spacing: 1.5px;
-}
-
-/* ===== Main ===== */
-main {
-  max-width: 720px;
-  margin: 28px auto;
-  padding: 0 16px 40px;
-  text-align: center;
-}
-
-main h2 {
-  margin-bottom: 14px;
-  font-size: 22px;
-  font-weight: 700;
-}
-
-/* ===== Post card (glass) ===== */
-.post {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  padding: 20px;
-  margin-top: 22px;
-  border-radius: var(--radius);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-  text-align: left;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-}
-
-.post:hover {
-  transform: translateY(-3px);
-  border-color: rgba(167, 139, 250, 0.6);
-  box-shadow: 0 12px 40px rgba(139, 92, 246, 0.35);
-}
-
-.post h3 { margin-bottom: 8px; font-size: 19px; letter-spacing: 0.5px; }
-.post p { margin: 6px 0; word-break: break-word; }
-.post small, .post .time { color: var(--muted); font-size: 12px; }
-
-/* ===== Media (photo / video / audio / iframe) ===== */
-.post img {
-  max-width: 100%;
-  border-radius: 14px;
-  margin: 10px 0;
-  display: block;
-}
-
-.post video, .post audio {
-  width: 100%;
-  margin: 10px 0;
-  border-radius: 14px;
-}
-
-.post iframe {
-  width: 100%;
-  aspect-ratio: 16/9;
-  border: 0;
-  border-radius: 14px;
-  margin: 10px 0;
-}
-
-/* ===== Links / files (PDF, APK, any link) ===== */
-.post-link {
-  display: block;
-  margin: 8px 0;
-  padding: 11px 14px;
-  background: var(--glass-strong);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  color: #67e8f9;
-  font-weight: 600;
-  text-decoration: none;
-  word-break: break-all;
-  transition: background 0.2s, color 0.2s;
-}
-
-.post-link:hover { background: var(--primary-2); color: #0b1020; }
-
-/* ===== Buttons (Like, Comment, View Comments, Share, Delete) ===== */
-button {
-  padding: 10px 18px;
-  margin: 5px 5px 5px 0;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
-}
-
-button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(236, 72, 153, 0.5); }
-button:active { transform: scale(0.95); }
-button:focus-visible, input:focus-visible, textarea:focus-visible {
-  outline: 2px solid #67e8f9;
-  outline-offset: 2px;
-}
-
-/* Delete / Block User buttons */
-button.danger,
-.delete-btn,
-.block-btn,
-.post button[onclick*="delete" i],
-.post button[onclick*="block" i] {
-  background: linear-gradient(135deg, #ef4444, #b91c1c);
-  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
-}
-
-/* ===== Inputs ===== */
-input, textarea, select {
-  width: 100%;
-  padding: 11px 14px;
-  margin: 6px 0;
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  color: var(--text);
-  font-size: 15px;
-  font-family: inherit;
-}
-
-input::placeholder, textarea::placeholder { color: #94a3b8; }
-
-input:focus, textarea:focus, select:focus {
-  outline: none;
-  border-color: var(--primary-2);
-  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.3);
-}
-
-/* ===== Comments: BLACK box ===== */
-.comment,
-.comment-item,
-.comment-box,
-.comments > div,
-[id^="comments-"] > div {
-  background: #000 !important;
-  color: #fff !important;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  padding: 10px 14px;
-  margin-top: 8px;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  flex-wrap: wrap;
-  word-break: break-word;
-}
-
-/* Comment likhne wala input / textarea black */
-.post input,
-.post textarea {
-  background: #000 !important;
-  color: #fff !important;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 12px;
-}
-
-.post input::placeholder,
-.post textarea::placeholder { color: #9ca3af; }
-
-/* Comment ke andar ke chhote buttons */
-.comment button,
-.comment-item button,
-.comments button {
-  padding: 5px 12px;
-  margin: 0;
-  font-size: 12px;
-  border-radius: 999px;
-}
-
-/* ===== Scrollbar ===== */
-::-webkit-scrollbar { width: 9px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.6); border-radius: 10px; }
-
-/* ===== Mobile ===== */
-@media (max-width: 600px) {
-  header { margin: 10px 10px 0; padding: 28px 12px 22px; border-radius: 18px; }
-  main { margin: 18px auto; padding: 0 12px 30px; }
-  .post { padding: 16px; border-radius: 18px; }
-  button { padding: 9px 14px; font-size: 13px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; }
-}
-
-/* ===== Logo ===== */
-.logo {
-  width: 90px;
-  height: 90px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
-  margin: 0 auto 10px;
-  display: block;
-}
-
-@media (max-width: 600px) {
-  .logo { width: 70px; height: 70px; }
-}
-
-/* ===== Logo ===== */
-.logo {
-  width: 90px;
-  height: 90px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
-  margin: 0 auto 10px;
-  display: block;
-}
-
-/* ===== Admin panel / Create post (glass) ===== */
-.admin-area,
-.admin-post {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
-  padding: 18px;
-  margin-bottom: 18px;
-  text-align: left;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-}
-
-.admin-area h2,
-.admin-post h2 { font-size: 18px; margin-bottom: 10px; }
-
-.admin-post textarea { min-height: 100px; resize: vertical; }
-
-.admin-post input[type="file"] { padding: 9px 12px; }
-
-@media (max-width: 600px) {
-  .logo { width: 70px; height: 70px; }
-}
-
-/* ===== Top menu: Ring Icon + shake ===== */
+/* ===== Section bar (nav) ===== */
 .nav {
   position: sticky;
-  top: 8px;
+  top: 0;
   z-index: 50;
   display: flex;
   justify-content: center;
-  gap: 10px;
-  width: min(92%, 340px);
-  margin: 12px auto 0;
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--glass-border);
-  border-radius: 999px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+  gap: 30px;
+  padding: 6px 12px 0;
+  background: var(--paper);
+  border-bottom: 1px solid var(--ink);
 }
 
 .nav a {
-  flex: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 8px 4px;
-  color: #cbd5e1;
+  gap: 7px;
+  padding: 6px 2px 7px;
+  color: var(--ink-soft);
+  font-family: var(--head);
+  font-size: 16px;
+  font-weight: 700;
   text-decoration: none;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: 999px;
-  transition: color 0.25s;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
 }
 
 .nav a svg {
-  width: 22px;
-  height: 22px;
+  width: 17px;
+  height: 17px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.nav a:hover { color: var(--ink); }
+.nav a.active { color: var(--ink); border-bottom-color: var(--accent); }
+.nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ===== Masthead ===== */
+header {
+  width: min(100% - 2 * var(--gutter), var(--page));
+  margin: 18px auto 0;
+  padding: 18px 0 14px;
+  text-align: center;
+  border-top: 7px solid var(--ink);
+  border-bottom: 4px double var(--ink);
+}
+
+.logo {
+  display: block;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 8px;
+  object-fit: cover;
   border-radius: 50%;
-  transition: all 0.3s;
+  border: 2px solid var(--ink);
+  filter: grayscale(1) contrast(1.1);
 }
 
-.nav a:focus-visible { outline: 2px solid #67e8f9; outline-offset: 2px; }
-.nav a.active { color: #fff; }
-
-.nav a.active svg {
-  width: 42px;
-  height: 42px;
-  padding: 10px;
-  margin-top: -10px;
-  border: 2px solid #fff;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.55), rgba(236, 72, 153, 0.55));
-  box-shadow: 0 0 14px rgba(167, 139, 250, 0.8);
+header h1 {
+  font-family: var(--head);
+  font-weight: 700;
+  font-size: clamp(30px, 9.5vw, 88px);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--ink);
 }
 
-/* Dabane par poora menu aur icon shake hota hai */
-.nav.shake { animation: navShake 0.45s; }
-.nav.shake a.active svg { animation: iconWiggle 0.45s; }
-
-@keyframes navShake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-8px); }
-  40% { transform: translateX(8px); }
-  60% { transform: translateX(-5px); }
-  80% { transform: translateX(5px); }
+header p {
+  margin: 12px auto 0;
+  padding-top: 8px;
+  max-width: 520px;
+  border-top: 1px solid var(--ink);
+  font-style: italic;
+  font-size: clamp(13px, 3vw, 16px);
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
 }
 
-@keyframes iconWiggle {
-  0%, 100% { transform: rotate(0); }
-  25% { transform: rotate(-20deg) scale(1.1); }
-  75% { transform: rotate(20deg) scale(1.1); }
+/* ===== Main ===== */
+main {
+  width: min(100% - 2 * var(--gutter), var(--page));
+  margin: 24px auto;
+  padding: 0 0 56px;
+  text-align: left;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .nav.shake, .nav.shake a.active svg { animation: none; }
+main > h2 {
+  margin: 26px 0 6px;
+  padding: 7px 0;
+  text-align: center;
+  font-family: var(--head);
+  font-size: 22px;
+  font-weight: 700;
+  border-top: 1px solid var(--ink);
+  border-bottom: 3px double var(--ink);
 }
 
-/* ===== Admin files page ===== */
-.lock { text-align: center; font-weight: 600; }
+main > p {
+  margin-bottom: 18px;
+  text-align: center;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+/* ===== Boxed notices (admin panel, create post) ===== */
+.admin-area,
+.admin-post {
+  margin: 8px 4px 26px;
+  padding: 16px;
+  background: var(--paper-2);
+  border: 1px solid var(--ink);
+  box-shadow: 0 0 0 3px var(--paper), 0 0 0 4px var(--ink);
+}
+
+.admin-area h2,
+.admin-post h2 {
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  font-family: var(--head);
+  font-size: 19px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--ink);
+}
+
+.admin-post textarea { min-height: 110px; resize: vertical; }
+
+/* ===== Articles (posts) ===== */
+/* Phone: 1 column. Tablet, laptop, desktop: 4 columns. */
+@media (min-width: 601px) {
+  #posts {
+    column-count: 4;
+    column-gap: 24px;
+    column-rule: 1px solid var(--ink);
+  }
+
+  /* columns are narrow, so the story text and buttons get a little smaller */
+  .post { font-size: 15px; line-height: 1.55; }
+  .post h3 + p::first-letter { font-size: 2.8em; padding: 4px 7px 0 0; }
+  .post > button { padding: 5px 9px; font-size: 12px; }
+}
+
+.post {
+  break-inside: avoid;
+  padding: 16px 0 20px;
+  border-top: 1px solid var(--ink);
+}
+
+.post h3 {
+  margin-bottom: 6px;
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+
+.post p { margin: 6px 0; word-break: break-word; }
+
+/* drop cap on the story's first letter */
+.post h3 + p::first-letter {
+  float: left;
+  padding: 6px 9px 0 0;
+  font-family: var(--head);
+  font-weight: 700;
+  font-size: 3.6em;
+  line-height: 0.8;
+  color: var(--ink);
+}
+
+.post small, .post .time { color: var(--ink-soft); font-size: 13px; }
+
+.post p[id^="like-count-"] {
+  display: inline-block;
+  margin: 0 12px 0 2px;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+/* ===== Media: printed photo look ===== */
+.post img {
+  display: block;
+  max-width: 100%;
+  margin: 10px 0 4px;
+  border: 1px solid var(--ink);
+  /* black-and-white print; colour returns on hover/tap. Delete this line to keep colour always. */
+  filter: grayscale(1) contrast(1.08);
+  transition: filter 0.3s;
+}
+
+.post img:hover { filter: none; }
+
+.post video, .post audio {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  border: 1px solid var(--ink);
+}
+
+.post iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 10px 0;
+  border: 1px solid var(--ink);
+}
+
+.post-link {
+  display: block;
+  margin: 10px 0;
+  padding: 10px 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--ink);
+  border-left: 5px solid var(--accent);
+  color: var(--link);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.post-link:hover { background: var(--ink); color: var(--paper); }
+
+/* ===== Buttons: ruled boxes ===== */
+button {
+  margin: 4px 6px 4px 0;
+  padding: 7px 13px;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  font-family: var(--body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+button:hover { background: var(--ink); color: var(--paper); }
+button:active { transform: translateY(1px); }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+#publishBtn { background: var(--ink); color: var(--paper); }
+#publishBtn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* Delete: the post's Delete button is the 5th button, and exists only for admin */
+button.danger,
+.post > button:nth-of-type(5) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+button.danger:hover,
+.post > button:nth-of-type(5):hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ===== Inputs ===== */
+input, textarea, select {
+  width: 100%;
+  margin: 6px 0;
+  padding: 10px 12px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  font-family: var(--body);
+  font-size: 16px;
+}
+
+input::placeholder, textarea::placeholder { color: var(--ink-soft); font-style: italic; }
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+input[type="file"] { padding: 8px 10px; }
+
+/* ===== Letters to the editor (comments) =====
+   script.js sets inline styles on these; !important is needed to override them. */
+[id^="comments-"] { margin-top: 12px; font-size: 15px; color: var(--ink-soft); }
+
+[id^="comments-"] > div {
+  margin: 8px 0 !important;
+  padding: 6px 10px !important;
+  background: transparent !important;
+  color: var(--ink) !important;
+  border-left: 3px solid var(--ink);
+  border-bottom: 1px dotted var(--ink-soft);
+  border-radius: 0 !important;
+  word-break: break-word;
+  flex-wrap: wrap;
+}
+
+[id^="comments-"] button {
+  margin: 0 0 0 6px;
+  padding: 2px 9px !important;
+  font-size: 12px;
+  background: transparent !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--ink);
+}
+
+[id^="comments-"] button:hover {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+}
+
+/* Block user: second button inside each comment */
+[id^="comments-"] button:last-child {
+  color: var(--accent) !important;
+  border-color: var(--accent);
+}
+
+[id^="comments-"] button:last-child:hover {
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+
+/* ===== Files page ===== */
+.lock { text-align: center; font-style: italic; }
+
+.files-section { margin-bottom: 30px; text-align: left; }
+
+.files-section h2 {
+  margin-bottom: 2px;
+  padding-top: 8px;
+  font-family: var(--head);
+  font-size: 24px;
+  font-weight: 700;
+  border-top: 3px double var(--ink);
+}
+
+.sec-note { margin: 2px 0 14px; font-size: 14px; font-style: italic; color: var(--ink-soft); }
 
 .folder-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
   margin: 12px 0 24px;
 }
 
@@ -402,68 +421,138 @@ input:focus, textarea:focus, select:focus {
   gap: 6px;
   margin: 0;
   padding: 18px 10px;
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: var(--paper-2);
+  border: 1px solid var(--ink);
 }
 
-.folder-icon { font-size: 38px; line-height: 1; }
-.folder-name { font-size: 14px; word-break: break-word; }
+.folder-card:hover { background: var(--ink); color: var(--paper); }
+
+.folder-icon { font-size: 34px; line-height: 1; filter: grayscale(1); }
+
+.folder-name {
+  font-family: var(--head);
+  font-size: 16px;
+  font-weight: 700;
+  word-break: break-word;
+}
 
 .back-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 3px double var(--ink);
 }
 
-.back-row h2 { flex: 1; margin: 0; font-size: 20px; text-align: left; }
+.back-row h2 {
+  flex: 1;
+  margin: 0;
+  font-family: var(--head);
+  font-size: 22px;
+  text-align: left;
+}
 
-.status { margin-top: 6px; font-size: 13px; color: var(--muted); }
+.status { margin-top: 6px; font-size: 14px; font-style: italic; color: var(--ink-soft); }
 
 .file-row {
   display: flex;
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
-  margin-top: 10px;
-  padding: 12px;
+  padding: 12px 0;
   text-align: left;
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px dotted var(--ink-soft);
 }
 
-.file-thumb { width: 52px; height: 52px; object-fit: cover; border-radius: 10px; }
-.file-icon { font-size: 34px; width: 52px; text-align: center; }
+.file-thumb {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border: 1px solid var(--ink);
+  filter: grayscale(1);
+}
+
+.file-icon { width: 52px; text-align: center; font-size: 30px; filter: grayscale(1); }
 .file-info { flex: 1; min-width: 120px; }
-.file-name { font-weight: 600; word-break: break-word; }
-.file-info small { color: var(--muted); }
+.file-name { font-family: var(--head); font-weight: 700; word-break: break-word; }
+.file-info small { color: var(--ink-soft); }
 .file-actions { display: flex; flex-wrap: wrap; gap: 6px; }
-.file-actions button { margin: 0; padding: 7px 12px; font-size: 12px; }
+.file-actions button { margin: 0; padding: 5px 11px; font-size: 13px; }
 
 .file-btn {
   display: inline-block;
-  padding: 7px 12px;
-  border-radius: 12px;
-  background: var(--glass-strong);
-  border: 1px solid var(--glass-border);
-  color: #67e8f9;
-  font-size: 12px;
+  padding: 5px 11px;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  font-size: 13px;
   font-weight: 600;
   text-decoration: none;
 }
 
-button:disabled { opacity: 0.5; cursor: not-allowed; }
+.file-btn:hover { background: var(--ink); color: var(--paper); }
 
-/* ===== Public / Admin sections ===== */
-[hidden] { display: none !important; }
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--paper-2); }
+::-webkit-scrollbar-thumb { background: var(--ink-soft); }
 
-.files-section { text-align: left; margin-bottom: 28px; }
-.files-section h2 { font-size: 20px; margin-bottom: 2px; }
-.sec-note { color: var(--muted); font-size: 13px; margin: 2px 0 12px; }
+/* ===== Screen sizes =====
+   Phone  : up to 600px   -> 1 column, big tap targets
+   Tablet : 601 - 899px   -> 4 columns, wider margins
+   Laptop : 900 - 1199px  -> 4 columns (set in the Articles section)
+   Wide   : 1200px and up -> 4 columns, wider page */
+
+/* Phone */
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  .nav { gap: 22px; }
+  header { margin-top: 10px; padding: 14px 0 12px; }
+  .logo { width: 60px; height: 60px; }
+  main { margin-top: 18px; padding-bottom: 40px; }
+  main > h2 { font-size: 19px; }
+
+  .admin-area, .admin-post { margin-left: 3px; margin-right: 3px; padding: 14px; }
+
+  .folder-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .back-row h2 { flex-basis: 100%; order: 3; font-size: 19px; }
+  .file-actions { width: 100%; }
+  .files-section h2 { font-size: 21px; }
+}
+
+/* Very small phones */
+@media (max-width: 360px) {
+  .nav { gap: 14px; }
+  button { padding: 7px 10px; font-size: 13px; }
+}
+
+/* Tablet */
+@media (min-width: 601px) {
+  :root { --gutter: 28px; }
+}
+
+@media (min-width: 900px) {
+  :root { --gutter: 36px; }
+}
+
+/* Laptop and bigger: keep the admin boxes a readable width and centred */
+@media (min-width: 900px) {
+  main > .admin-area, .admin-post { max-width: 760px; margin-left: auto; margin-right: auto; }
+}
+
+/* Wide desktop */
+@media (min-width: 1200px) {
+  :root { --page: 1280px; }
+}
+
+/* Touch screens: comfortable tap targets */
+@media (pointer: coarse) {
+  button, .file-btn { min-height: 40px; }
+  .nav a { min-height: 44px; }
+  [id^="comments-"] button { min-height: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}
