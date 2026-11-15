@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi-IN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>i_singhhappy</title>
+    <meta name="description" content="Happy Singh (i_singhhappy) ki posts, photos aur updates.">
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -34,6 +35,13 @@
         <textarea id="postText" placeholder="Write your post..."></textarea>
         <input type="file" id="postFile">
         <input type="url" id="postLink" placeholder="Link (https://...)">
+        <label for="postSize">Post ka size</label>
+        <select id="postSize" class="size-select">
+            <option value="s">Chhota (1 column)</option>
+            <option value="m">Medium (2 column)</option>
+            <option value="l">Bada (3 column)</option>
+            <option value="xl">Poori chaudai</option>
+        </select>
         <button id="publishBtn" onclick="createPost()">Publish Post</button>
     </div>
 
@@ -43,6 +51,9 @@
     <div id="posts"></div>
 
 </main>
+
+<footer class="site-footer">© <span id="y"></span> Happy Singh (i_singhhappy)<br><a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="community-rules.html">Community Rules</a> · <a href="privacy-policy.html">Privacy Policy</a> · <a href="terms.html">Terms</a> · <a href="copyright.html">Copyright / DMCA</a></footer>
+<script>document.getElementById("y").textContent=new Date().getFullYear();</script>
 
 <script type="module" src="script.js"></script>
 

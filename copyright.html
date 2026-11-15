@@ -1,0 +1,711 @@
+@import url("https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap");
+
+/* ===== HAPPY SINGH — Newspaper edition, on frosted glass =====
+   Fonts: Old Standard TT (masthead, headlines) + Source Serif 4 (text).
+   Newsprint paper with soft colour behind frosted-glass panels, one spot red.
+   Dark "night edition" follows the phone setting. */
+
+:root {
+  color-scheme: light dark;
+
+  --paper: #ebe8de;
+  --paper-2: #e1ddd0;
+  --ink: #1c1b18;
+  --ink-soft: #55514a;
+  --accent: #a31d16;
+  --link: #1d3b5a;
+
+  /* glass: translucent panels over the soft colour behind the page */
+  --edge: rgba(28, 27, 24, 0.5);
+  --glass: rgba(255, 255, 255, 0.38);
+  --glass-strong: rgba(255, 255, 255, 0.6);
+  --glass-nav: rgba(235, 232, 222, 0.62);
+  --glass-input: rgba(255, 255, 255, 0.55);
+  --glass-hi: rgba(255, 255, 255, 0.75);
+  --glass-shadow: 0 10px 32px rgba(28, 27, 24, 0.14);
+  /* background patches: chai (tea), white, grey */
+  --blob-1: rgba(160, 110, 58, 0.45);   /* chai, deep */
+  --blob-2: rgba(255, 255, 255, 0.90);  /* white */
+  --blob-3: rgba(120, 120, 120, 0.32);  /* grey */
+  --blob-4: rgba(196, 152, 98, 0.38);   /* chai, light */
+  --blob-5: rgba(255, 255, 255, 0.80);  /* white */
+
+  /* page width and side margin: header and main both use these, so their edges always line up */
+  --gutter: 14px;
+  --page: 1000px;
+
+  --head: "Old Standard TT", "Bodoni MT", Didot, Georgia, "Times New Roman", serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1d1c19;
+    --paper-2: #262521;
+    --ink: #e8e4d8;
+    --ink-soft: #aaa59a;
+    --accent: #e5675c;
+    --link: #9bbbe0;
+
+    --edge: rgba(232, 228, 216, 0.35);
+    --glass: rgba(255, 255, 255, 0.06);
+    --glass-strong: rgba(255, 255, 255, 0.12);
+    --glass-nav: rgba(29, 28, 25, 0.6);
+    --glass-input: rgba(255, 255, 255, 0.08);
+    --glass-hi: rgba(255, 255, 255, 0.14);
+    --glass-shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
+    --blob-1: rgba(150, 100, 55, 0.38);
+    --blob-2: rgba(255, 255, 255, 0.10);
+    --blob-3: rgba(170, 170, 170, 0.16);
+    --blob-4: rgba(185, 140, 90, 0.26);
+    --blob-5: rgba(255, 255, 255, 0.07);
+  }
+}
+
+/* People who asked their device for less transparency get solid panels */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass: var(--paper-2);
+    --glass-strong: var(--paper-2);
+    --glass-nav: var(--paper);
+    --glass-input: var(--paper);
+  }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 64px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+img, video, iframe, audio { max-width: 100%; }
+main, .post, .file-info, .folder-card { min-width: 0; overflow-wrap: break-word; }
+
+body {
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink);
+  min-height: 100vh;
+  background-color: var(--paper);
+  /* faint paper grain */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection { background: var(--ink); color: var(--paper); }
+
+/* chai, white and grey patches behind everything, so the glass has something to frost */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 48% 34% at 8% 6%, var(--blob-1), transparent 72%),
+    radial-gradient(ellipse 42% 30% at 86% 10%, var(--blob-2), transparent 72%),
+    radial-gradient(ellipse 34% 40% at 96% 52%, var(--blob-3), transparent 72%),
+    radial-gradient(ellipse 40% 34% at 6% 58%, var(--blob-5), transparent 72%),
+    radial-gradient(ellipse 30% 26% at 55% 48%, var(--blob-3), transparent 72%),
+    radial-gradient(ellipse 52% 36% at 30% 100%, var(--blob-4), transparent 72%),
+    radial-gradient(ellipse 36% 30% at 90% 96%, var(--blob-2), transparent 72%);
+}
+
+/* frosted panels */
+.nav, header, .admin-area, .admin-post, #posts, .folder-card, .file-row {
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+}
+
+[hidden] { display: none !important; }
+
+/* ===== Section bar (nav) ===== */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 6px 12px 0;
+  background: var(--glass-nav);
+  border-bottom: 1px solid var(--edge);
+}
+
+.nav a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 2px 7px;
+  color: var(--ink-soft);
+  font-family: var(--head);
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+
+.nav a svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav a:hover { color: var(--ink); }
+.nav a.active { color: var(--ink); border-bottom-color: var(--accent); }
+.nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ===== Masthead ===== */
+header {
+  width: min(100% - 2 * var(--gutter), var(--page));
+  margin: 18px auto 0;
+  padding: 18px 16px 14px;
+  text-align: center;
+  background: var(--glass);
+  border-top: 7px solid var(--ink);
+  border-bottom: 4px double var(--ink);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-hi);
+}
+
+.logo {
+  display: block;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 8px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  filter: grayscale(1) contrast(1.1);
+}
+
+header h1 {
+  font-family: var(--head);
+  font-weight: 700;
+  font-size: clamp(30px, 9.5vw, 88px);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+
+header p {
+  margin: 12px auto 0;
+  padding-top: 8px;
+  max-width: 520px;
+  border-top: 1px solid var(--ink);
+  font-style: italic;
+  font-size: clamp(13px, 3vw, 16px);
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+/* ===== Main ===== */
+main {
+  width: min(100% - 2 * var(--gutter), var(--page));
+  margin: 24px auto;
+  padding: 0 0 56px;
+  text-align: left;
+}
+
+main > h2 {
+  margin: 26px 0 6px;
+  padding: 7px 0;
+  text-align: center;
+  font-family: var(--head);
+  font-size: 22px;
+  font-weight: 700;
+  border-top: 1px solid var(--ink);
+  border-bottom: 3px double var(--ink);
+}
+
+main > p {
+  margin-bottom: 18px;
+  text-align: center;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+/* ===== Boxed notices (admin panel, create post) ===== */
+.admin-area,
+.admin-post {
+  margin: 8px 4px 26px;
+  padding: 16px;
+  background: var(--glass);
+  border: 1px solid var(--edge);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-hi);
+}
+
+.admin-area h2,
+.admin-post h2 {
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  font-family: var(--head);
+  font-size: 19px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--ink);
+}
+
+.admin-post textarea { min-height: 110px; resize: vertical; }
+
+/* ===== Articles (posts) ===== */
+/* Front-page grid. Phone: 2 columns. Tablet, laptop, desktop: 4 columns.
+   The admin picks each post's size (data-size set by script.js):
+   tablet and up: s = 1 column, m = 2 columns, l = 3 columns, xl = full width.
+   phone: s = half width, m / l / xl = full width. */
+#posts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  background: var(--glass);
+  border-right: 1px solid var(--edge);
+  border-bottom: 1px solid var(--edge);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-hi);
+}
+
+/* Phone: bigger posts take the whole row (tablet and up override this below) */
+.post[data-size="m"],
+.post[data-size="l"],
+.post[data-size="xl"] { grid-column: 1 / -1; }
+
+@media (min-width: 601px) {
+  #posts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-flow: dense; /* smaller posts fill the gaps beside bigger ones */
+  }
+
+  .post[data-size="m"]  { grid-column: span 2; font-size: 16px; }
+  .post[data-size="l"]  { grid-column: span 3; font-size: 17px; line-height: 1.65; }
+  .post[data-size="xl"] { grid-column: 1 / -1; font-size: 18px; line-height: 1.65; }
+
+  .post[data-size="xl"] h3 + p { max-width: 75ch; }
+
+  .post[data-size="l"] h3 + p::first-letter,
+  .post[data-size="xl"] h3 + p::first-letter { font-size: 3.6em; padding: 6px 9px 0 0; }
+
+  /* columns are narrow, so the story text and buttons get a little smaller */
+  .post { font-size: 15px; line-height: 1.55; }
+  .post h3 + p::first-letter { font-size: 2.8em; padding: 4px 7px 0 0; }
+  .post > button { padding: 5px 9px; font-size: 12px; }
+}
+
+.post {
+  padding: 16px 16px 20px;
+  border-top: 1px solid var(--edge);
+  border-left: 1px solid var(--edge);
+}
+
+.post h3 {
+  margin-bottom: 6px;
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+
+.post p { margin: 6px 0; word-break: break-word; }
+
+/* drop cap on the story's first letter */
+.post h3 + p::first-letter {
+  float: left;
+  padding: 6px 9px 0 0;
+  font-family: var(--head);
+  font-weight: 700;
+  font-size: 3.6em;
+  line-height: 0.8;
+  color: var(--ink);
+}
+
+.post small, .post .time { color: var(--ink-soft); font-size: 13px; }
+
+.post p[id^="like-count-"] {
+  display: inline-block;
+  margin: 0 12px 0 2px;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+/* ===== Media: printed photo look ===== */
+.post img {
+  display: block;
+  max-width: 100%;
+  margin: 10px 0 4px;
+  border: 1px solid var(--ink);
+  /* black-and-white print; colour returns on hover/tap. Delete this line to keep colour always. */
+  filter: grayscale(1) contrast(1.08);
+  transition: filter 0.3s;
+}
+
+.post img:hover { filter: none; }
+
+.post video, .post audio {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  border: 1px solid var(--ink);
+}
+
+.post iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 10px 0;
+  border: 1px solid var(--ink);
+}
+
+.post-link {
+  display: block;
+  margin: 10px 0;
+  padding: 10px 12px;
+  background: var(--glass-strong);
+  border: 1px solid var(--edge);
+  border-left: 5px solid var(--accent);
+  color: var(--link);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.post-link:hover { background: var(--ink); color: var(--paper); }
+
+/* ===== Buttons: ruled boxes ===== */
+button {
+  margin: 4px 6px 4px 0;
+  padding: 7px 13px;
+  background: var(--glass-strong);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  font-family: var(--body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+button:hover { background: var(--ink); color: var(--paper); }
+button:active { transform: translateY(1px); }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+#publishBtn { background: var(--ink); color: var(--paper); }
+#publishBtn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* Delete: the post's Delete button is the 5th button, and exists only for admin */
+button.danger,
+.post > button:nth-of-type(5) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+button.danger:hover,
+.post > button:nth-of-type(5):hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ===== Inputs ===== */
+input, textarea, select {
+  width: 100%;
+  margin: 6px 0;
+  padding: 10px 12px;
+  background: var(--glass-input);
+  color: var(--ink);
+  border: 1px solid var(--edge);
+  border-radius: 0;
+  font-family: var(--body);
+  font-size: 16px;
+}
+
+input::placeholder, textarea::placeholder { color: var(--ink-soft); font-style: italic; }
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+input[type="file"] { padding: 8px 10px; }
+
+/* Post size picker (admin only) */
+.size-select { width: auto; max-width: 100%; margin: 4px 0; padding: 4px 8px; font-size: 13px; }
+
+.admin-post label {
+  display: block;
+  margin-top: 6px;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+/* ===== Letters to the editor (comments) =====
+   script.js sets inline styles on these; !important is needed to override them. */
+[id^="comments-"] { margin-top: 12px; font-size: 15px; color: var(--ink-soft); }
+
+[id^="comments-"] > div {
+  margin: 8px 0 !important;
+  padding: 6px 10px !important;
+  background: transparent !important;
+  color: var(--ink) !important;
+  border-left: 3px solid var(--ink);
+  border-bottom: 1px dotted var(--ink-soft);
+  border-radius: 0 !important;
+  word-break: break-word;
+  flex-wrap: wrap;
+}
+
+[id^="comments-"] button {
+  margin: 0 0 0 6px;
+  padding: 2px 9px !important;
+  font-size: 12px;
+  background: transparent !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--ink);
+}
+
+[id^="comments-"] button:hover {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+}
+
+/* Block user: second button inside each comment */
+[id^="comments-"] button:last-child {
+  color: var(--accent) !important;
+  border-color: var(--accent);
+}
+
+[id^="comments-"] button:last-child:hover {
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+
+/* ===== Files page ===== */
+.lock { text-align: center; font-style: italic; }
+
+.files-section { margin-bottom: 30px; text-align: left; }
+
+.files-section h2 {
+  margin-bottom: 2px;
+  padding-top: 8px;
+  font-family: var(--head);
+  font-size: 24px;
+  font-weight: 700;
+  border-top: 3px double var(--ink);
+}
+
+.sec-note { margin: 2px 0 14px; font-size: 14px; font-style: italic; color: var(--ink-soft); }
+
+.folder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+  margin: 12px 0 24px;
+}
+
+.folder-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 18px 10px;
+  background: var(--glass);
+  border: 1px solid var(--edge);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-hi);
+}
+
+.folder-card:hover { background: var(--ink); color: var(--paper); }
+
+.folder-icon { font-size: 34px; line-height: 1; filter: grayscale(1); }
+
+.folder-name {
+  font-family: var(--head);
+  font-size: 16px;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+.back-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 3px double var(--ink);
+}
+
+.back-row h2 {
+  flex: 1;
+  margin: 0;
+  font-family: var(--head);
+  font-size: 22px;
+  text-align: left;
+}
+
+.status { margin-top: 6px; font-size: 14px; font-style: italic; color: var(--ink-soft); }
+
+.file-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding: 12px;
+  text-align: left;
+  background: var(--glass);
+  border: 1px solid var(--edge);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-hi);
+}
+
+.file-thumb {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border: 1px solid var(--ink);
+  filter: grayscale(1);
+}
+
+.file-icon { width: 52px; text-align: center; font-size: 30px; filter: grayscale(1); }
+.file-info { flex: 1; min-width: 120px; }
+.file-name { font-family: var(--head); font-weight: 700; word-break: break-word; }
+.file-info small { color: var(--ink-soft); }
+.file-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.file-actions button { margin: 0; padding: 5px 11px; font-size: 13px; }
+
+.file-btn {
+  display: inline-block;
+  padding: 5px 11px;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.file-btn:hover { background: var(--ink); color: var(--paper); }
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--paper-2); }
+::-webkit-scrollbar-thumb { background: var(--ink-soft); }
+
+/* ===== Screen sizes =====
+   Phone  : up to 600px   -> 2 columns, big tap targets
+   Tablet : 601 - 899px   -> 4 columns, wider margins
+   Laptop : 900 - 1199px  -> 4 columns (set in the Articles section)
+   Wide   : 1200px and up -> 4 columns, wider page */
+
+/* Phone */
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  .nav { gap: 22px; }
+  header { margin-top: 10px; padding: 14px 12px 12px; }
+  .logo { width: 60px; height: 60px; }
+  main { margin-top: 18px; padding-bottom: 40px; }
+  main > h2 { font-size: 19px; }
+
+  /* two narrow columns: smaller text and buttons so everything fits */
+  .post { padding: 10px 10px 14px; font-size: 14px; line-height: 1.5; }
+  .post[data-size="m"], .post[data-size="l"], .post[data-size="xl"] { padding: 14px; font-size: 16px; line-height: 1.6; }
+  .post h3 { font-size: 11px; letter-spacing: 0.1em; }
+  .post h3 + p::first-letter { font-size: 2.4em; padding: 3px 6px 0 0; }
+  .post > button { margin: 3px 4px 3px 0; padding: 4px 8px; font-size: 11.5px; min-height: 34px; }
+  .post p[id^="like-count-"] { margin-right: 6px; font-size: 12px; }
+
+  .admin-area, .admin-post { margin-left: 3px; margin-right: 3px; padding: 14px; }
+
+  .folder-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .back-row h2 { flex-basis: 100%; order: 3; font-size: 19px; }
+  .file-actions { width: 100%; }
+  .files-section h2 { font-size: 21px; }
+}
+
+/* Very small phones */
+@media (max-width: 360px) {
+  .nav { gap: 14px; }
+  button { padding: 7px 10px; font-size: 13px; }
+}
+
+/* Tablet */
+@media (min-width: 601px) {
+  :root { --gutter: 28px; }
+}
+
+@media (min-width: 900px) {
+  :root { --gutter: 36px; }
+}
+
+/* Laptop and bigger: keep the admin boxes a readable width and centred */
+@media (min-width: 900px) {
+  main > .admin-area, .admin-post { max-width: 760px; margin-left: auto; margin-right: auto; }
+}
+
+/* Wide desktop */
+@media (min-width: 1200px) {
+  :root { --page: 1280px; }
+}
+
+/* Touch screens: comfortable tap targets */
+@media (pointer: coarse) {
+  button, .file-btn { min-height: 40px; }
+  .nav a { min-height: 44px; }
+  [id^="comments-"] button { min-height: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* ===== Legal pages aur footer ===== */
+.legal {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 18px 20px 26px;
+  text-align: left;
+  background: var(--glass);
+  border: 1px solid var(--edge);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-hi);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+}
+.legal h2 {
+  margin: 24px 0 6px;
+  padding-bottom: 4px;
+  font-family: var(--head);
+  font-size: 20px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--ink);
+}
+.legal .sec-note { margin: 0 0 10px; }
+.legal p, .legal li { margin: 6px 0; }
+.legal ul, .legal ol { padding-left: 1.3em; }
+.legal a { color: var(--link); }
+.legal label { display: block; margin-top: 6px; font-size: 14px; font-style: italic; color: var(--ink-soft); }
+.legal .note { padding: 10px 12px; background: var(--glass-strong); border-left: 5px solid var(--accent); }
+
+.site-footer {
+  width: min(100% - 2 * var(--gutter), var(--page));
+  margin: 0 auto 40px;
+  padding: 14px 0 0;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--ink-soft);
+  border-top: 3px double var(--ink);
+}
+.site-footer a { color: var(--ink-soft); }
+.site-footer a:hover { color: var(--ink); }

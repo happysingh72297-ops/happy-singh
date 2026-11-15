@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="hi-IN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Happy Singh</title>
+    <meta name="description" content="Happy Singh se sampark karein: sawal, shikayat ya removal request.">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="nav">
+    <a href="index.html"><svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a>
+    <a href="admin.html"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Files</span></a>
+</nav>
+
+<header>
+    <img src="logo.png" alt="Happy Singh logo" class="logo" onerror="this.style.display='none'">
+    <h1>CONTACT</h1>
+    <p>SAWAL, SHIKAYAT YA REQUEST</p>
+</header>
+
+<main>
+<article class="legal">
+
+<p>Sawal, suggestion, shikayat ya kisi content ko hatwane ke liye hume likhein. Hum jawab dene ki koshish karenge.</p>
+<h2>Email</h2>
+<p><a href="mailto:YOUR_EMAIL@example.com">YOUR_EMAIL@example.com</a></p>
+<h2>Instagram</h2>
+<p><strong>i_singhhappy</strong></p>
+<h2>Sandesh bhejein</h2>
+<p>Neeche ka form aapke email app mein ek taiyaar email kholega.</p>
+<form class="contact" id="f">
+<div><label for="n">Aapka naam</label><input id="n" required autocomplete="name"></div>
+<div><label for="e">Aapka email</label><input id="e" type="email" required autocomplete="email"></div>
+<div><label for="m">Sandesh</label><textarea id="m" rows="6" required></textarea></div>
+<button type="submit">Email taiyaar karein</button>
+</form>
+<h2>Shikayat adhikari (Grievance Officer)</h2>
+<p>Naam: <strong>YAHAN APNA NAAM LIKHEIN</strong><br>Email: <a href="mailto:YOUR_EMAIL@example.com">YOUR_EMAIL@example.com</a><br>Hum shikayat milne ke 72 ghante ke andar uski rasid dene ki koshish karte hain.</p>
+<script>
+document.getElementById("f").addEventListener("submit",function(ev){
+ev.preventDefault();
+var s=encodeURIComponent("Website sandesh: "+document.getElementById("n").value);
+var b=encodeURIComponent(document.getElementById("m").value+"\n\nNaam: "+document.getElementById("n").value+"\nEmail: "+document.getElementById("e").value);
+location.href="mailto:YOUR_EMAIL@example.com?subject="+s+"&body="+b;
+});
+</script>
+
+</article>
+</main>
+
+<footer class="site-footer">© <span id="y"></span> Happy Singh (i_singhhappy)<br><a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="community-rules.html">Community Rules</a> · <a href="privacy-policy.html">Privacy Policy</a> · <a href="terms.html">Terms</a> · <a href="copyright.html">Copyright / DMCA</a></footer>
+<script>document.getElementById("y").textContent=new Date().getFullYear();</script>
+</body>
+</html>
