@@ -44,7 +44,6 @@ const MAX_MB = { image: 10, audio: 20, video: 100, file: 10 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-
 const $ = (id) => document.getElementById(id);
 
 function isAdmin() {
