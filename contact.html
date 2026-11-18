@@ -23,35 +23,28 @@
 
 <main>
 <article class="legal">
-
-<p>Sawal, suggestion, shikayat ya kisi content ko hatwane ke liye hume likhein. Hum jawab dene ki koshish karenge.</p>
-<h2>Email</h2>
-<p><a href="mailto:singhhappy.contact1@gmail.com">singhhappy.contact1@gmail.com</a></p>
+<p>Sawal, suggestion, shikayat ya kisi content ko hatwane ke liye neeche form bharein. Aapka sandesh sirf admin ko dikhega.</p>
 <h2>Instagram</h2>
 <p><strong>i_singhhappy</strong></p>
 <h2>Sandesh bhejein</h2>
-<p>Neeche ka form aapke email app mein ek taiyaar email kholega.</p>
-<form class="contact" id="f">
-<div><label for="n">Aapka naam</label><input id="n" required autocomplete="name"></div>
-<div><label for="e">Aapka email</label><input id="e" type="email" required autocomplete="email"></div>
-<div><label for="m">Sandesh</label><textarea id="m" rows="6" required></textarea></div>
-<button type="submit">Email taiyaar karein</button>
+<form id="cform">
+<label for="cn">Aapka naam</label>
+<input id="cn" required maxlength="60" autocomplete="name">
+<label for="cc">Sampark (email ya phone, zaroori nahi)</label>
+<input id="cc" maxlength="100" autocomplete="off">
+<label for="cm">Sandesh</label>
+<textarea id="cm" rows="6" required maxlength="1000"></textarea>
+<input id="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+<button id="cbtn" type="submit">Sandesh bhejein</button>
+<p id="cstatus" class="status" role="status"></p>
 </form>
 <h2>Shikayat adhikari (Grievance Officer)</h2>
-<p>Naam: <strong>YAHAN APNA NAAM LIKHEIN</strong><br>Email: <a href="mailto:singhhappy.contact1@gmail.com">singhhappy.contact1@gmail.com</a><br>Hum shikayat milne ke 72 ghante ke andar uski rasid dene ki koshish karte hain.</p>
-<script>
-document.getElementById("f").addEventListener("submit",function(ev){
-ev.preventDefault();
-var s=encodeURIComponent("Website sandesh: "+document.getElementById("n").value);
-var b=encodeURIComponent(document.getElementById("m").value+"\n\nNaam: "+document.getElementById("n").value+"\nEmail: "+document.getElementById("e").value);
-location.href="mailto:singhhappy.contact1@gmail.com?subject="+s+"&body="+b;
-});
-</script>
-
+<p>Naam: <strong>इस website का मालिक यानी की मैं हैप्पी सिंह <br>Shikayat ke liye upar wala form bharein, aur jawab pane ke liye apna sampark (email ya phone) zaroor likhein. Hum aapki shikayat 72 ghante ke andar dekhne aur jawab dene ki poori koshish karenge.</p>
 </article>
 </main>
 
 <footer class="site-footer">© <span id="y"></span> Happy Singh (i_singhhappy)<br><a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="community-rules.html">Community Rules</a> · <a href="privacy-policy.html">Privacy Policy</a> · <a href="terms.html">Terms</a> · <a href="copyright.html">Copyright / DMCA</a></footer>
 <script>document.getElementById("y").textContent=new Date().getFullYear();</script>
+<script type="module" src="contact.js"></script>
 </body>
 </html>

@@ -40,6 +40,9 @@ function isAdmin() {
 function updateAdminUI() {
     const postBox = document.querySelector(".admin-post");
     if (postBox) postBox.style.display = isAdmin() ? "block" : "none";
+
+    const msgLink = document.getElementById("msgLink");
+    if (msgLink) msgLink.hidden = !isAdmin();
 }
 
 onAuthStateChanged(auth, async (user) => {
