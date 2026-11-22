@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Document Editor | Word jaisa page, browser mein</title>
+<style id="pgs"></style>
+<style>
+:root{--paper:#ebe8de;--paper-2:#e1ddd0;--ink:#1c1b18;--ink-soft:#55514a;--accent:#a31d16;--link:#1d3b5a;--edge:rgba(28,27,24,.5);--glass:rgba(255,255,255,.38);--glass-strong:rgba(255,255,255,.6);--glass-nav:rgba(235,232,222,.85);--glass-input:rgba(255,255,255,.55);--glass-hi:rgba(255,255,255,.75);--glass-shadow:0 10px 32px rgba(28,27,24,.14);--gutter:14px;--page:1000px;--head:"Old Standard TT",Georgia,"Times New Roman",serif;--body:"Source Serif 4",Georgia,"Times New Roman",serif}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body)}
+</style>
+<link rel="stylesheet" href="style.css">
+<style>
+.nav{position:static}
+header h1{font-size:clamp(26px,6vw,46px)}
+#bar{position:sticky;top:0;z-index:40;width:min(100% - 2 * var(--gutter),var(--page));margin:14px auto 0;padding:8px;display:flex;flex-direction:column;gap:6px;background:var(--glass-nav);border:1px solid var(--edge);box-shadow:var(--glass-shadow);-webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%)}
+.g{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.g+.g{border-top:1px solid var(--edge);padding-top:6px}
+.sep{width:1px;height:22px;background:var(--edge);margin:0 3px}
+#bar button,#bar select,#bar input{margin:0;height:32px;font-size:14px}
+#bar button{padding:0 10px}#bar select{width:auto;padding:0 6px}
+#bar input[type=color]{width:36px;padding:2px}#bar #fs{width:78px;padding:0 6px}
+.pri{background:var(--ink)!important;color:var(--paper)!important}
+.pri:hover{background:var(--accent)!important;border-color:var(--accent)!important;color:#fff!important}
+.lb{font-size:13px;font-style:italic;color:var(--ink-soft);margin:0 2px 0 4px}
+#wrap{padding:22px 0 90px;overflow:auto}
+#sheet{position:relative;width:max-content;margin:0 auto}
+#wm{position:absolute;inset:0;pointer-events:none;background-repeat:repeat-y}
+#paper{margin:0 auto;background:#fff;color:#111;box-shadow:0 2px 12px rgba(0,0,0,.25);outline:0;font:12pt/1.15 Calibri,Arial,"Noto Sans Devanagari",sans-serif;overflow-wrap:anywhere}
+#paper p{margin:0 0 8pt}
+#paper h1{font-size:20pt;margin:12pt 0 6pt}#paper h2{font-size:16pt;margin:10pt 0 6pt}#paper h3{font-size:13pt;margin:8pt 0 4pt}
+#paper hr{margin:8pt 0}
+#paper img{max-width:100%;height:auto;cursor:pointer}#paper img:hover{outline:2px solid #93b4ea}
+.pb{height:0;border-top:2px dashed #999;margin:14px 0}
+#imgbar{position:fixed;z-index:60;display:flex;gap:4px;background:var(--paper);border:1px solid var(--ink);padding:4px;box-shadow:var(--glass-shadow)}
+#imgbar button{margin:0;padding:0 10px;height:30px}
+#cropm,#gm,#wmm{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:12px}
+.cb{background:var(--paper);color:var(--ink);border:1px solid var(--ink);padding:14px;max-width:100%;display:flex;flex-direction:column;gap:8px;align-items:center}
+#cc{touch-action:none;cursor:crosshair;max-width:100%}
+.cb p{margin:0;font-size:14px;font-style:italic;color:var(--ink-soft);max-width:520px}
+.gb{width:min(520px,100%);max-height:92vh;overflow:auto;align-items:stretch}
+.gb h2{font-family:var(--head);font-size:20px;margin:0 0 4px;padding-bottom:4px;border-bottom:1px solid var(--ink)}
+.gb label{display:block;margin:8px 0 2px;font-size:14px;font-style:italic;color:var(--ink-soft)}
+.gb .g{margin-top:12px}.gb input[type=color]{width:46px;height:34px;padding:2px}.gb input[type=range]{padding:0;box-shadow:none}
+#status{position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--ink);color:var(--paper);padding:4px 12px;font-size:13px}
+@media print{.nav,header,#bar,#status,#imgbar,#cropm,#gm,#wmm,.site-footer{display:none!important}body{background:#fff}body::before{display:none}#wrap{zoom:1!important;padding:0}#sheet{width:auto!important}#wm{position:fixed;inset:0;z-index:9;background-size:contain!important;background-repeat:no-repeat!important;background-position:center!important}#paper{width:auto!important;min-height:0!important;padding:0!important;border:0!important;box-shadow:none!important;outline:0!important;background:#fff!important}.pb{border:0;break-after:page}}
+.site-footer{width:min(100% - 2 * var(--gutter),var(--page));margin:10px auto 0;padding:14px 0 48px;border-top:3px double var(--ink);text-align:center;font-size:14px;color:var(--ink-soft)}.site-footer a{color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<nav class="nav">
+    <a href="index.html"><svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a>
+    <a href="admin.html"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Files</span></a>
+    <a href="card-maker.html"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M8 10h8M8 14h5"/></svg><span>Cards</span></a>
+    <a href="document-editor.html" class="active"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg><span>Documents</span></a>
+</nav>
+
+<header>
+    <img src="logo.png" alt="Happy Singh logo" class="logo" onerror="this.style.display='none'">
+    <h1>DOCUMENT EDITOR</h1>
+    <p>APNA PAGE, WORD JAISA, BROWSER MEIN</p>
+</header>
+
+<div id="bar">
+ <div class="g">
+  <button data-a="new">Naya</button><button class="pri" data-a="gen">Auto Generate</button><button class="pri" data-a="doc">Word (.doc) download</button><button class="pri" data-a="print">PDF / Print</button>
+  <span class="sep"></span>
+  <button data-c="undo" title="Undo">&#8630;</button><button data-c="redo" title="Redo">&#8631;</button>
+  <span class="sep"></span>
+  <select id="st" aria-label="Style"><option value="p">Normal</option><option value="h1">Heading 1</option><option value="h2">Heading 2</option><option value="h3">Heading 3</option></select>
+  <select id="ff" aria-label="Font (50 tarah ke)"></select>
+  <input id="fs" list="fsl" type="number" min="1" max="400" step="0.5" value="12" aria-label="Font size (pt), 1 se 400"><datalist id="fsl"></datalist>
+ </div>
+ <div class="g">
+  <button data-c="bold" title="Bold (Ctrl+B)"><b>B</b></button><button data-c="italic" title="Italic (Ctrl+I)"><i>I</i></button><button data-c="underline" title="Underline (Ctrl+U)"><u>U</u></button>
+  <span class="lb">Text</span><input type="color" id="fc" value="#000000" aria-label="Text color"><span class="lb">Highlight</span><input type="color" id="hc" value="#ffff00" aria-label="Highlight color">
+  <span class="sep"></span>
+  <button data-c="justifyLeft" title="Left">&#8676;</button><button data-c="justifyCenter" title="Center">&#8801;</button><button data-c="justifyRight" title="Right">&#8677;</button><button data-c="justifyFull" title="Justify">&#9776;</button>
+  <span class="sep"></span>
+  <button data-c="outdent" title="Outdent">&#8592;</button><button data-c="indent" title="Indent">&#8594;</button>
+  <button data-c="removeFormat" title="Clear formatting">Clear</button>
+ </div>
+ <div class="g">
+  <button data-a="img">Photo / Logo</button><button data-c="insertHorizontalRule">Line</button><button data-a="pb">Page break</button><button data-a="wm">Watermark</button>
+  <span class="sep"></span>
+  
+  <select id="po" aria-label="Orientation"><option value="p">Portrait</option><option value="l">Landscape</option></select>
+  <select id="pm" aria-label="Margins"><option value="25.4">Normal margin</option><option value="12.7">Narrow</option><option value="38.1">Wide</option></select>
+  <span class="lb">Page color</span><input type="color" id="pc" value="#ffffff" aria-label="Page color">
+  <span class="lb">Border</span><select id="pb" aria-label="Page border (50 design)"></select><input type="color" id="pbc" value="#000000" aria-label="Border color">
+  <select id="pz" aria-label="Zoom"><option value="fit">Zoom: Fit</option><option value="75">75%</option><option value="100">100%</option><option value="125">125%</option><option value="150">150%</option></select>
+  <input type="file" id="imf" accept="image/*" hidden>
+ </div>
+</div>
+<div id="wrap"><div id="sheet"><div id="paper" contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true" aria-label="Document"></div><div id="wm" aria-hidden="true"></div></div></div>
+<footer class="site-footer">© <span id="y"></span> Happy Singh (i_singhhappy)<br><a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="community-rules.html">Community Rules</a> · <a href="privacy-policy.html">Privacy Policy</a> · <a href="terms.html">Terms</a> · <a href="copyright.html">Copyright / DMCA</a></footer>
+<script>document.getElementById("y").textContent=new Date().getFullYear();</script>
+<div id="status"></div>
+
+<div id="imgbar" hidden><button class="pri" data-i="crop">Crop</button><button data-i="sm">Chhota</button><button data-i="lg">Bada</button><button data-i="l">Left</button><button data-i="c">Center</button><button data-i="r">Right</button><button data-i="del">Hatao</button></div>
+<div id="cropm" hidden role="dialog" aria-modal="true" aria-label="Photo crop">
+ <div class="cb"><canvas id="cc"></canvas>
+  <div class="g"><select id="car" aria-label="Crop shape"><option value="0">Free</option><option value="1">1:1 (square)</option><option value="1.3333">4:3</option><option value="0.75">3:4</option><option value="1.7778">16:9</option></select><button class="pri" id="cok">Crop karo</button><button id="cre">Reset</button><button id="cx">Band karo</button></div>
+  <p>Photo par mouse ya ungli kheench kar jagah chuno. Chuni hui jagah ko andar se pakadkar hila bhi sakte ho.</p></div>
+</div>
+<div id="gm" hidden role="dialog" aria-modal="true" aria-label="Auto Generate">
+ <div class="cb gb"><form id="gform">
+  <h2>Auto Generate</h2>
+  <label for="gt">Kaisa document chahiye?</label><select id="gt"></select>
+  <div id="gf"></div>
+  <div class="g"><button class="pri" type="submit">Document banao</button><button type="button" id="gx">Band karo</button></div>
+  <p style="font-size:.85rem;color:#555">Document ban jane ke baad page par jo chahe badal sakte ho.</p>
+ </form></div>
+</div>
+<div id="wmm" hidden role="dialog" aria-modal="true" aria-label="Watermark">
+ <div class="cb gb">
+  <h2>Watermark</h2>
+  <label for="wt">Text (jaise: DRAFT, CONFIDENTIAL, apna naam)</label><input id="wt" type="text" maxlength="40">
+  <label for="wi">Ya photo / logo ka watermark</label><input id="wi" type="file" accept="image/*">
+  <div class="g" style="margin-top:8px"><label>Rang <input type="color" id="wc" value="#888888" style="width:46px"></label>
+   <label>Tirchha / seedha <select id="wr"><option value="-35">Tirchha</option><option value="0">Seedha</option></select></label></div>
+  <label for="ws">Size</label><input id="ws" type="range" min="20" max="250" value="90">
+  <label for="wo">Halka / gehra</label><input id="wo" type="range" min="5" max="60" value="25">
+  <div class="g"><button class="pri" id="wok" type="button">Lagao</button><button id="wno" type="button">Watermark hatao</button><button id="wx" type="button">Band karo</button></div>
+ </div>
+</div>
+<script>
+const $=id=>document.getElementById(id),P=$("paper");
+const SZ={A4:[210,297],A5:[148,210],Letter:[215.9,279.4],Legal:[215.9,355.6]};
+const pg={s:"A4",o:"p",m:25.4,c:"#ffffff",b:0,bc:"#000000",z:"fit"};
+let sel=null,tm=0;
+$("fsl").innerHTML=[1,2,3,4,5,6,7,8,9,10,11,12,14,16,18,20,24,28,36,48,72,96,150,200].map(n=>`<option value="${n}">`).join("");
+
+document.addEventListener("selectionchange",()=>{const s=getSelection();if(s.rangeCount&&P.contains(s.anchorNode))sel=s.getRangeAt(0)});
+function cmd(c,v){P.focus();if(sel){const s=getSelection();s.removeAllRanges();s.addRange(sel)}document.execCommand(c,false,v==null?null:v);saveDoc()}
+function setSize(pt){cmd("fontSize","7");P.querySelectorAll('font[size="7"],span[style*="xxx-large"]').forEach(f=>{f.removeAttribute("size");f.style.fontSize=pt+"pt"})}
+
+function dims(){let[w,h]=SZ[pg.s];if(pg.o=="l")[w,h]=[h,w];return[w,h]}
+function apply(){
+ const[w,h]=dims();
+ Object.assign(P.style,{width:w+"mm",minHeight:h+"mm",padding:pg.m+"mm",backgroundColor:pg.c,
+  backgroundImage:`repeating-linear-gradient(to bottom,transparent 0,transparent calc(${h}mm - 2px),#c8c8c8 calc(${h}mm - 2px),#c8c8c8 ${h}mm)`,
+  border:"",borderImage:"",borderRadius:"",outline:"",outlineOffset:"",boxShadow:""});P.style.cssText+=";"+BD[pg.b][1](pg.bc,pg.c);
+ $("pgs").textContent=`@page{size:${w}mm ${h}mm;margin:${pg.m}mm}`;
+ $("wrap").style.zoom=pg.z=="fit"?Math.min(1,(innerWidth-24)/(w*96/25.4)):pg.z/100;
+ wmx();count();
+}
+function count(){
+ const t=P.innerText.trim(),h=dims()[1]*96/25.4;
+ $("status").textContent=(t?t.split(/\s+/).length:0)+" words  |  "+t.length+" characters  |  lagbhag "+Math.max(1,Math.ceil(P.scrollHeight/h))+" page  |  "+pg.s;
+}
+function saveDoc(){count();clearTimeout(tm);tm=setTimeout(()=>{try{localStorage.setItem("wd",P.innerHTML)}catch(e){}},400)}
+function down(b,n){const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=n;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
+function doc(){
+ const[w,h]=dims();
+ const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>@page Section1{size:${w}mm ${h}mm;margin:${pg.m}mm}div.Section1{page:Section1}body{font-family:Calibri,Arial;font-size:12pt}table{border-collapse:collapse}td{border:1px solid #777;padding:4px}<\/style><\/head><body><div class="Section1">${P.innerHTML}<\/div><\/body><\/html>`;
+ down(new Blob(["\ufeff",html],{type:"application/msword"}),"document.doc");
+}
+
+$("bar").addEventListener("mousedown",e=>{if(e.target.closest("button"))e.preventDefault()});
+$("bar").addEventListener("click",e=>{
+ const b=e.target.closest("button");if(!b)return;
+ if(b.dataset.c)return cmd(b.dataset.c);
+ ({new:()=>{if(confirm("Poora document saaf kar dein?")){P.innerHTML="<p><br></p>";saveDoc()}},
+   doc,print:()=>window.print(),wm:()=>{$("wmm").hidden=false},gen:()=>{$("gm").hidden=false;$("g_"+FM[$("gt").value][1][0][0]).focus()},
+   img:()=>$("imf").click(),
+   pb:()=>cmd("insertHTML",'<div class="pb" contenteditable="false"></div><p><br></p>')})[b.dataset.a]();
+});
+$("imf").addEventListener("change",e=>{
+ const f=e.target.files[0];if(!f)return;
+ const r=new FileReader();r.onload=()=>cmd("insertImage",r.result);r.readAsDataURL(f);e.target.value="";
+});
+$("st").onchange=e=>cmd("formatBlock","<"+e.target.value+">");
+$("ff").onchange=e=>cmd("fontName",e.target.value);
+$("fs").onchange=e=>setSize(e.target.value);
+$("fc").oninput=e=>cmd("foreColor",e.target.value);
+$("hc").oninput=e=>cmd("hiliteColor",e.target.value);
+const set=(id,k,f)=>$(id).addEventListener("input",e=>{pg[k]=f?f(e.target.value):e.target.value;apply()});
+set("po","o");set("pm","m",Number);set("pc","c");set("pb","b",Number);set("pbc","bc");set("pz","z");
+P.addEventListener("input",saveDoc);
+
+
+// ---- Photo: select, resize, align, crop ----
+let cur=null,cimg=null,cs=1,R=null,drag=null;
+function showBar(){
+ const b=$("imgbar");
+ if(!cur||!P.contains(cur)){b.hidden=true;return}
+ const r=cur.getBoundingClientRect();b.hidden=false;
+ b.style.left=Math.max(8,Math.min(r.left,innerWidth-b.offsetWidth-8))+"px";
+ b.style.top=(r.top<150?r.bottom+6:r.top-44)+"px";
+}
+P.addEventListener("click",e=>{cur=e.target.tagName=="IMG"?e.target:null;showBar()});
+addEventListener("scroll",showBar,true);
+$("imgbar").addEventListener("mousedown",e=>e.preventDefault());
+$("imgbar").addEventListener("click",e=>{
+ const b=e.target.closest("button");if(!b||!cur)return;
+ const k=b.dataset.i,st=cur.style;
+ if(k=="crop")return openCrop();
+ if(k=="sm"||k=="lg"){st.width=Math.round(Math.max(30,Math.min(P.clientWidth,cur.offsetWidth*(k=="lg"?1.15:.85))))+"px";st.height="auto"}
+ if(k=="l"){st.float="left";st.display="inline";st.margin="0 12px 6px 0"}
+ if(k=="r"){st.float="right";st.display="inline";st.margin="0 0 6px 12px"}
+ if(k=="c"){st.float="none";st.display="block";st.margin="6px auto"}
+ if(k=="del"){cur.remove();cur=null}
+ saveDoc();showBar();
+});
+function openCrop(){
+ cimg=new Image();
+ cimg.onload=()=>{
+  const c=$("cc");cs=Math.min(Math.min(innerWidth-50,720)/cimg.width,innerHeight*.6/cimg.height,1);
+  c.width=Math.round(cimg.width*cs);c.height=Math.round(cimg.height*cs);
+  R={x:0,y:0,w:c.width,h:c.height};$("cropm").hidden=false;dcrop();
+ };
+ cimg.src=cur.src;
+}
+function dcrop(){
+ const c=$("cc"),x=c.getContext("2d");
+ x.drawImage(cimg,0,0,c.width,c.height);
+ x.fillStyle="rgba(0,0,0,.55)";x.beginPath();x.rect(0,0,c.width,c.height);x.rect(R.x,R.y,R.w,R.h);x.fill("evenodd");
+ x.strokeStyle="#fff";x.lineWidth=2;x.strokeRect(R.x,R.y,R.w,R.h);
+}
+const cpt=e=>{const c=$("cc"),r=c.getBoundingClientRect();return[(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]};
+$("cc").onpointerdown=e=>{
+ const c=$("cc"),[px,py]=cpt(e);c.setPointerCapture(e.pointerId);
+ const inside=px>R.x&&px<R.x+R.w&&py>R.y&&py<R.y+R.h&&(R.w<c.width-1||R.h<c.height-1);
+ drag=inside?{m:1,dx:px-R.x,dy:py-R.y}:{m:0,sx:px,sy:py};
+};
+$("cc").onpointermove=e=>{
+ if(!drag)return;
+ const c=$("cc"),[px,py]=cpt(e),cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+ if(drag.m){R.x=cl(px-drag.dx,0,c.width-R.w);R.y=cl(py-drag.dy,0,c.height-R.h)}
+ else{
+  let w=cl(px,0,c.width)-drag.sx,h=cl(py,0,c.height)-drag.sy;const a=+$("car").value;
+  if(a){const sx=w<0?-1:1,sy=h<0?-1:1,my=sy>0?c.height-drag.sy:drag.sy,mx=sx>0?c.width-drag.sx:drag.sx;
+   let aw=Math.abs(w),ah=aw/a;if(ah>my){ah=my;aw=ah*a}if(aw>mx){aw=mx;ah=aw/a}w=sx*aw;h=sy*ah}
+  R={x:Math.min(drag.sx,drag.sx+w),y:Math.min(drag.sy,drag.sy+h),w:Math.abs(w),h:Math.abs(h)};
+ }
+ dcrop();
+};
+$("cc").onpointerup=()=>{drag=null};
+$("cre").onclick=()=>{const c=$("cc");R={x:0,y:0,w:c.width,h:c.height};dcrop()};
+$("cx").onclick=()=>{$("cropm").hidden=true};
+$("cok").onclick=()=>{
+ if(R.w<5||R.h<5)return;
+ const o=document.createElement("canvas"),k=1/cs,w0=cur.offsetWidth,full=$("cc").width,jp=cur.src.startsWith("data:image/jpeg");
+ o.width=Math.round(R.w*k);o.height=Math.round(R.h*k);
+ o.getContext("2d").drawImage(cimg,R.x*k,R.y*k,R.w*k,R.h*k,0,0,o.width,o.height);
+ try{cur.src=jp?o.toDataURL("image/jpeg",.92):o.toDataURL("image/png")}catch(e){alert("Is photo ko crop nahi kar sakte. Photo ko apne device se dobara daalo.");return}
+ cur.style.width=Math.round(w0*R.w/full)+"px";cur.style.height="auto";
+ $("cropm").hidden=true;saveDoc();showBar();
+};
+document.addEventListener("keydown",e=>{if(e.key=="Escape"){$("cropm").hidden=true;$("gm").hidden=true;$("wmm").hidden=true}});
+
+
+// ---- Auto Generate ----
+const FM={
+ resume:["Resume / CV",[["name","Poora naam"],["phone","Phone"],["email","Email"],["addr","Pata (address)"],["obj","Objective (2-3 line)","t"],["edu","Education (har line mein ek: Degree, College, Saal)","t"],["exp","Experience (har line mein ek)","t"],["skl","Skills (har line mein ek, ya comma laga kar)","t"]]],
+ job:["Job application",[["name","Aapka naam"],["addr","Pata"],["phone","Phone"],["to","Kisko (jaise: The HR Manager)"],["org","Company ka naam"],["post","Post ka naam"],["qual","Qualification"],["exp","Experience (zaroori nahi, jaise: 2 years)"],["date","Tarikh (khali = aaj)","d"]]],
+ leave:["Leave application (chhutti)",[["name","Aapka naam"],["role","Class / Post"],["to","Kisko (jaise: The Principal)"],["org","School / Office ka naam"],["why","Chhutti ki wajah"],["from","Kab se","d"],["till","Kab tak (ek din ki ho to khali)","d"],["date","Aaj ki tarikh (khali = aaj)","d"]]],
+ notice:["Notice",[["org","Sanstha ka naam"],["sub","Notice ka vishay"],["date","Tarikh (khali = aaj)","d"],["body","Notice ki jaankari","t"],["by","Jaari karne wale ka naam / post"]]],
+ comp:["Shikayat patra (complaint letter)",[["name","Aapka naam"],["addr","Pata"],["phone","Phone"],["to","Kisko (jaise: The Manager)"],["org","Office / Company"],["sub","Vishay"],["body","Shikayat ki jaankari","t"],["date","Tarikh (khali = aaj)","d"]]]
+};
+const E=x=>String(x||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const LN=x=>E(x).split("\n").map(t=>t.trim()).filter(Boolean);
+const fd=v=>(v?new Date(v+"T00:00"):new Date()).toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"});
+const toB=v=>`<p>To,<br>${E(v.to)}${v.org?",<br>"+E(v.org):""}.</p><p>Date: ${fd(v.date)}</p>`;
+const sig=(v,c)=>`<p>${c},<br>${E(v.name)}${v.addr?"<br>"+E(v.addr):""}${v.phone?"<br>Phone: "+E(v.phone):""}</p>`;
+const paras=x=>LN(x).map(t=>`<p>${t}</p>`).join("");
+const G={
+ resume:v=>{const sec=(t,a)=>a.length?`<h3>${t}</h3>`+a.map(x=>`<p>&#8226; ${x}</p>`).join(""):"";
+  return `<h1 style="text-align:center;margin:0">${E(v.name).toUpperCase()}</h1><p style="text-align:center">${[v.addr,v.phone,v.email].filter(Boolean).map(E).join(" | ")}</p><hr>`
+   +(v.obj?`<h3>OBJECTIVE</h3><p>${E(v.obj)}</p>`:"")+sec("EDUCATION",LN(v.edu))+sec("EXPERIENCE",LN(v.exp))+sec("SKILLS",LN(v.skl.replace(/,/g,"\n")))},
+ job:v=>toB(v)+`<p><b>Subject: Application for the post of ${E(v.post)}</b></p><p>Respected Sir/Madam,</p><p>With due respect, I would like to apply for the post of ${E(v.post)} in ${E(v.org)}. I have completed ${E(v.qual)}${v.exp?" and I have "+E(v.exp)+" of experience":""}. I am hardworking, punctual and ready to learn, and I am confident that I can do the work given to me honestly.</p><p>I request you to kindly consider my application and give me a chance for an interview. I shall be thankful to you.</p><p>Thanking you,</p>`+sig(v,"Yours faithfully"),
+ leave:v=>toB(v)+`<p><b>Subject: Application for leave</b></p><p>Respected Sir/Madam,</p><p>I, ${E(v.name)}${v.role?", "+E(v.role)+",":""} request you to kindly grant me leave ${v.till&&v.till!=v.from?"from "+fd(v.from)+" to "+fd(v.till):"on "+fd(v.from)} due to ${E(v.why)}.</p><p>I shall be very grateful to you for this kindness.</p><p>Thanking you,</p><p>Yours obediently,<br>${E(v.name)}${v.role?"<br>"+E(v.role):""}</p>`,
+ notice:v=>`<h2 style="text-align:center;margin:0">${E(v.org).toUpperCase()}</h2><h2 style="text-align:center;text-decoration:underline">NOTICE</h2><p>Date: ${fd(v.date)}</p><p><b>Subject: ${E(v.sub)}</b></p>${paras(v.body)}<p style="text-align:right"><br>${E(v.by)}</p>`,
+ comp:v=>toB(v)+`<p><b>Subject: ${E(v.sub)}</b></p><p>Respected Sir/Madam,</p><p>I wish to bring the following matter to your kind attention.</p>${paras(v.body)}<p>I request you to kindly look into the matter and take necessary action at the earliest. I shall be thankful to you.</p><p>Thanking you,</p>`+sig(v,"Yours faithfully")
+};
+$("gt").innerHTML=Object.keys(FM).map(k=>`<option value="${k}">${FM[k][0]}</option>`).join("");
+function gform(){
+ $("gf").innerHTML=FM[$("gt").value][1].map(([k,l,t],i)=>`<label for="g_${k}">${l}</label>`+(t=="t"?`<textarea id="g_${k}" rows="3"></textarea>`:`<input id="g_${k}" type="${t=="d"?"date":"text"}"${i==0?" required":""}>`)).join("");
+}
+$("gt").onchange=gform;gform();
+$("gx").onclick=()=>{$("gm").hidden=true};
+$("gform").onsubmit=e=>{
+ e.preventDefault();
+ const v={};FM[$("gt").value][1].forEach(([k])=>v[k]=$("g_"+k).value.trim());
+ if(P.innerText.trim()&&!confirm("Page par jo likha hai wo hat jayega. Aage badhein?"))return;
+ P.innerHTML=G[$("gt").value](v);cur=null;showBar();$("gm").hidden=true;saveDoc();P.focus();
+};
+
+
+// ---- 50 fonts ----
+const SYS=["Calibri","Arial","Times New Roman","Georgia","Verdana","Courier New"];
+const FN=["Roboto","Open Sans","Lato","Montserrat","Oswald","Raleway","Merriweather","Playfair Display","Lora","PT Serif","Nunito","Ubuntu","Bebas Neue","Pacifico","Lobster","Dancing Script","Great Vibes","Satisfy","Caveat","Shadows Into Light","Indie Flower","Permanent Marker","Courgette","Cinzel","Abril Fatface","Anton","Bangers","Righteous","Comfortaa","Josefin Sans","Quicksand","Source Code Pro","Orbitron","Archivo Black","Fredoka","Poppins","Hind","Mukta","Kalam","Tiro Devanagari Hindi","Yatra One","Rozha One","Noto Sans Devanagari","Noto Serif Devanagari"];
+{const l=document.createElement("link");l.rel="stylesheet";l.href="https://fonts.googleapis.com/css2?"+FN.map(n=>"family="+n.replace(/ /g,"+")).join("&")+"&display=swap";document.head.appendChild(l)}
+$("ff").innerHTML=SYS.concat(FN).map((f,i)=>`<option value="'${f}',sans-serif" style="font-family:'${f}'">${i+1}. ${f}</option>`).join("");
+
+// ---- 50 page borders ----
+const SH="0 2px 12px rgba(0,0,0,.25)";
+const BD=[["Koi border nahi",()=>""]];
+[["solid",2],["solid",5],["solid",10],["double",6],["double",12],["dashed",3],["dashed",6],["dotted",4],["dotted",8],["groove",8],["ridge",8],["inset",8],["outset",8]].forEach(([t,w])=>BD.push([`${t[0].toUpperCase()+t.slice(1)} ${w}px`,c=>`border:${w}px ${t} ${c}`]));
+[["solid",4],["solid",10],["double",8],["dashed",4],["dotted",6]].forEach(([t,w])=>BD.push([`Gol kone, ${t} ${w}px`,c=>`border:${w}px ${t} ${c};border-radius:28px`]));
+[[3,"solid",1,"solid",-10],[6,"solid",2,"solid",-14],[2,"solid",2,"solid",-8],[6,"double",2,"solid",-16],[4,"dashed",2,"solid",-12],[8,"solid",2,"dotted",-14]].forEach(([w,t,ow,ot,o])=>BD.push([`Frame ${w}px ${t} + andar ${ot}`,c=>`border:${w}px ${t} ${c};outline:${ow}px ${ot} ${c};outline-offset:${o}px`]));
+[["Rainbow","red,orange,gold,green,blue,violet"],["Tiranga","#ff9933,#ffffff,#138808"],["Gold","#b8860b,#ffd700,#b8860b"],["Neela-baingani","#2563eb,#9333ea"],["Laal-narangi","#dc2626,#f59e0b"],["Hara-neela","#059669,#0ea5e9"],["Gulabi-baingani","#ec4899,#7c3aed"],["Kala-grey","#111111,#999999"],["Sunset","#f97316,#ec4899,#6d28d9"],["Ocean","#0ea5e9,#1e3a8a"]].forEach(([n,g])=>BD.push(["Gradient: "+n,()=>`border:8px solid;border-image:linear-gradient(135deg,${g}) 1`]));
+[["Laal-safed","#dc2626","#ffffff"],["Kala-peela","#111111","#facc15"],["Neela-safed","#2563eb","#ffffff"],["Hara-safed","#16a34a","#ffffff"],["Kesari-safed","#f97316","#ffffff"],["Gulabi-safed","#ec4899","#ffffff"]].forEach(([n,a,b])=>BD.push(["Patti: "+n,()=>`border:12px solid;border-image:repeating-linear-gradient(45deg,${a} 0 10px,${b} 10px 20px) 1`]));
+[[3,6,2],[5,8,3],[2,10,2],[8,6,2]].forEach(([a,b,d],i)=>BD.push(["Double frame "+(i+1),(c,pc)=>`border:0;box-shadow:${SH},inset 0 0 0 ${a}px ${c},inset 0 0 0 ${a+b}px ${pc},inset 0 0 0 ${a+b+d}px ${c}`]));
+[["Upar-neeche patti","border-top:10px solid C;border-bottom:10px solid C"],["Left-right patti","border-left:10px solid C;border-right:10px solid C"],["Sirf upar mota","border-top:16px solid C"],["Sirf neeche mota","border-bottom:16px solid C"],["Upar-neeche double","border-top:6px double C;border-bottom:6px double C"],["Sirf left mota","border-left:16px solid C"]].forEach(([n,t])=>BD.push([n,c=>t.replace(/C/g,c)]));
+$("pb").innerHTML=BD.map(([n],i)=>`<option value="${i}">${i?i+". ":""}${n}</option>`).join("");
+
+// ---- Watermark ----
+const wm={t:"",c:"#888888",s:90,o:25,r:-35,img:null};
+function wmx(){
+ const[w,h]=dims(),W=Math.round(w*96/25.4),H=Math.round(h*96/25.4),el=$("wm");
+ if(!wm.t&&!wm.img){el.style.backgroundImage="none";return}
+ const X=t=>t.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])),rot=`rotate(${wm.r} ${W/2} ${H/2})`;
+ const bw=W*wm.s/250;
+ const body=wm.img?`<image xlink:href="${wm.img}" x="${(W-bw)/2}" y="${(H-bw)/2}" width="${bw}" height="${bw}" preserveAspectRatio="xMidYMid meet" opacity="${wm.o/100}" transform="${rot}"/>`
+  :`<text x="${W/2}" y="${H/2}" text-anchor="middle" dominant-baseline="middle" transform="${rot}" font-family="Arial,sans-serif" font-weight="bold" font-size="${wm.s}" fill="${wm.c}" fill-opacity="${wm.o/100}">${X(wm.t)}</text>`;
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${body}</svg>`;
+ el.style.backgroundImage=`url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}")`;
+ el.style.backgroundSize=`100% ${h}mm`;
+}
+$("wi").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{wm.img=r.result};r.readAsDataURL(f)};
+$("wok").onclick=()=>{
+ wm.t=$("wt").value.trim();wm.c=$("wc").value;wm.s=+$("ws").value;wm.o=+$("wo").value;wm.r=+$("wr").value;
+ if(!$("wi").files.length)wm.img=null;
+ wmx();$("wmm").hidden=true;
+};
+$("wno").onclick=()=>{wm.t="";wm.img=null;$("wt").value="";$("wi").value="";wmx();$("wmm").hidden=true};
+$("wx").onclick=()=>{$("wmm").hidden=true};
+
+document.execCommand("styleWithCSS",false,true);
+document.execCommand("defaultParagraphSeparator",false,"p");
+try{P.innerHTML=localStorage.getItem("wd")||"<p><br></p>"}catch(e){P.innerHTML="<p><br></p>"}
+apply();addEventListener("resize",apply);
+</script>
+</body>
+</html>

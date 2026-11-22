@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Card Maker | Birthday, Shadi, Anniversary, Mundan card banao</title>
+<meta name="description" content="Free card maker: template chuno ya form bharkar card apne aap banao. PNG ya PDF mein download karo.">
+<style>
+:root{--paper:#ebe8de;--paper-2:#e1ddd0;--ink:#1c1b18;--ink-soft:#55514a;--accent:#a31d16;--link:#1d3b5a;--edge:rgba(28,27,24,.5);--glass:rgba(255,255,255,.38);--glass-strong:rgba(255,255,255,.6);--glass-nav:rgba(235,232,222,.85);--glass-input:rgba(255,255,255,.55);--glass-hi:rgba(255,255,255,.75);--glass-shadow:0 10px 32px rgba(28,27,24,.14);--gutter:14px;--page:1000px;--head:"Old Standard TT",Georgia,"Times New Roman",serif;--body:"Source Serif 4",Georgia,"Times New Roman",serif}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body)}
+</style>
+<link rel="stylesheet" href="style.css">
+<style>
+main{display:grid;grid-template-columns:1fr minmax(300px,430px);gap:24px;align-items:start}
+.view{order:-1}
+.panel{background:var(--glass);border:1px solid var(--edge);box-shadow:var(--glass-shadow),inset 0 1px 0 var(--glass-hi);padding:16px;-webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%)}
+.tabs{display:flex;gap:6px;margin-bottom:12px;padding-bottom:10px;border-bottom:3px double var(--ink)}
+.tabs button{flex:1;margin:0}
+button[aria-pressed=true],button.main{background:var(--ink);color:var(--paper)}
+label{display:block;margin:10px 0 2px;font-size:14px;font-style:italic;color:var(--ink-soft)}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.row label{display:flex;align-items:center;gap:6px;margin:4px 0}
+input[type=color]{width:46px;height:34px;padding:2px;margin:0}
+input[type=range]{padding:0;margin:0;width:120px;box-shadow:none}
+.tp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tp button{padding:3px!important;margin:0}
+.tp button[aria-pressed=true]{outline:3px solid var(--accent);outline-offset:1px}
+.tp canvas{width:100%;height:auto;display:block}
+.blk{border-top:1px solid var(--edge);margin-top:10px}
+.tb{gap:6px}
+.tb button{padding:3px 11px;margin:0;font-size:13px}
+.tb select{width:auto;flex:1;min-width:110px;margin:0;padding:5px;font-size:14px}
+.view{position:sticky;top:64px}
+#cv{display:block;width:100%;max-width:520px;height:auto;margin:0 auto;border:1px solid var(--ink);box-shadow:var(--glass-shadow)}
+.dl{display:flex;gap:10px;justify-content:center;margin-top:14px}
+.dl button{background:var(--ink);color:var(--paper)}
+.dl button:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.note{margin:6px 0 0;font-size:14px;font-style:italic;color:var(--ink-soft)}
+@media(max-width:820px){main{grid-template-columns:1fr}.view{position:static;order:0}}
+.site-footer{width:min(100% - 2 * var(--gutter),var(--page));margin:10px auto 0;padding:14px 0 48px;border-top:3px double var(--ink);text-align:center;font-size:14px;color:var(--ink-soft)}.site-footer a{color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<nav class="nav">
+    <a href="index.html"><svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a>
+    <a href="admin.html"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Files</span></a>
+    <a href="card-maker.html" class="active"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M8 10h8M8 14h5"/></svg><span>Cards</span></a>
+    <a href="document-editor.html"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg><span>Documents</span></a>
+</nav>
+
+<header>
+    <img src="logo.png" alt="Happy Singh logo" class="logo" onerror="this.style.display='none'">
+    <h1>CARD MAKER</h1>
+    <p>BIRTHDAY, SHADI, BHAGWAN AUR AUR BHI CARDS</p>
+</header>
+<main>
+<section class="panel">
+  <div class="tabs">
+    <button id="tMan" aria-pressed="true">Text</button>
+    <button id="tDes" aria-pressed="false">Design</button>
+    <button id="tAuto" aria-pressed="false">Auto Generate</button>
+  </div>
+
+  <div id="pMan">
+    <label for="font">Font (poore card ka)</label><select id="font"></select>
+    <label for="photo">Photo (zaroori nahi)</label>
+    <input type="file" id="photo" accept="image/*"><button id="noPhoto" type="button" style="margin-top:6px">Photo hatao</button>
+    <div id="blk"></div>
+    <p class="note">B = bold, I = italic, U = underline, L/C/R = left/center/right. Hindi likhne ke liye Hindi font chuno.</p>
+  </div>
+
+  <div id="pDes" hidden>
+    <label for="tc">Template (category chuno)</label><select id="tc"></select>
+    <div class="tp" id="tp"></div>
+    <div class="row" style="justify-content:space-between;align-items:center;margin-top:8px"><button type="button" id="tpv">&larr; Pichla</button><span id="pn" class="note"></span><button type="button" id="tnx">Agla &rarr;</button></div>
+    <label for="pgc">Page ka rang</label>
+    <div class="row"><input type="color" id="pgc" value="#ffffff"><button type="button" id="pgr">Template wala rang</button></div>
+    <label for="bs">Page border</label>
+    <select id="bs"><option value="tpl">Template wala</option><option value="none">Koi border nahi</option><option value="single">Ek line</option><option value="double">Double line</option><option value="dots">Dotted</option><option value="dash">Dashed</option><option value="orn">Sajawati (kone mein diamond)</option><option value="round">Gol kone</option></select>
+    <div class="row"><label>Rang <input type="color" id="bc" value="#000000"></label><label>Motai <input type="range" id="bw" min="2" max="30" value="6"></label><label>Doori <input type="range" id="bm" min="20" max="140" value="50"></label></div>
+    <label for="dz">Design (sajawat)</label>
+    <select id="dz"><option value="tpl">Template wala</option><option value="none">Koi nahi</option><option value="conf">Confetti</option><option value="dots">Chhote dots</option><option value="star">Diamonds</option><option value="band">Upar-neeche patti</option><option value="stripe">Tirchhi patti</option><option value="rays">Sunburst</option><option value="circ">Bade gol</option><option value="wave">Lehren</option><option value="check">Checks</option></select>
+    <p class="note">Template badalne par page rang, border aur design reset ho jate hain.</p>
+  </div>
+
+  <form id="pAuto" hidden>
+    <label for="a_o">Card kis cheez ka?</label>
+    <select id="a_o"><option value="birthday">Birthday</option><option value="shaadi" selected>Shadi</option><option value="anniversary">Anniversary</option><option value="mundan">Mundan</option><option value="other">Dusra</option></select>
+    <label for="a_1">Naam</label><input type="text" id="a_1" maxlength="40" placeholder="Jaise: Rahul" required>
+    <label for="a_2">Dusra naam (shadi / anniversary mein)</label><input type="text" id="a_2" maxlength="40" placeholder="Jaise: Priya">
+    <label for="a_d">Tarikh</label><input type="date" id="a_d">
+    <label for="a_p">Jagah / samay</label><input type="text" id="a_p" maxlength="80" placeholder="Jaise: Shubh Hall, Delhi, shaam 7 baje">
+    <label for="a_f">Bhejne wale ka naam</label><input type="text" id="a_f" maxlength="40" placeholder="Jaise: Sharma Parivar">
+    <button class="main" type="submit" style="margin-top:14px;width:100%">Card banao</button>
+    <p class="note">Card ban jane ke baad aap Khud Banao mein jaakar kuch bhi badal sakte ho.</p>
+  </form>
+</section>
+
+<section class="view">
+  <canvas id="cv" width="1080" height="1350" role="img" aria-label="Card ka preview"></canvas>
+  <div class="dl"><button id="png">PNG download</button><button id="pdf">PDF download</button></div>
+</section>
+</main>
+
+<footer class="site-footer">© <span id="y"></span> Happy Singh (i_singhhappy)<br><a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="community-rules.html">Community Rules</a> · <a href="privacy-policy.html">Privacy Policy</a> · <a href="terms.html">Terms</a> · <a href="copyright.html">Copyright / DMCA</a></footer>
+<script>document.getElementById("y").textContent=new Date().getFullYear();</script>
+
+<script>
+const $=id=>document.getElementById(id);
+const SYS=["Calibri","Arial","Times New Roman","Georgia","Verdana","Courier New"];
+const FN=["Roboto","Open Sans","Lato","Montserrat","Oswald","Raleway","Merriweather","Playfair Display","Lora","PT Serif","Nunito","Ubuntu","Bebas Neue","Pacifico","Lobster","Dancing Script","Great Vibes","Satisfy","Caveat","Shadows Into Light","Indie Flower","Permanent Marker","Courgette","Cinzel","Abril Fatface","Anton","Bangers","Righteous","Comfortaa","Josefin Sans","Quicksand","Source Code Pro","Orbitron","Archivo Black","Fredoka","Poppins","Hind","Mukta","Kalam","Tiro Devanagari Hindi","Yatra One","Rozha One","Noto Sans Devanagari","Noto Serif Devanagari",
+"Alegreya","Amita","Arvo","Bitter","Cabin","Cormorant Garamond","Crimson Text","DM Serif Display","EB Garamond","Exo 2","Fjalla One","Gloria Hallelujah","Handlee","Kaushan Script","Marck Script","Merienda","Monoton","Neucha","Noto Serif","Old Standard TT","Philosopher","Rubik","Sacramento","Signika","Slabo 27px","Teko","Titillium Web","Vollkorn","Yellowtail","Zilla Slab","Allura","Alex Brush","Berkshire Swash","Cookie","Parisienne","Tangerine","Rock Salt","Patrick Hand","Sriracha","Baloo 2","Laila","Khand","Karma","Sarpanch","Eczar","Martel","Poiret One","Lemon","Alfa Slab One","Varela Round"];
+const FONTS=SYS.concat(FN).map(f=>[f,"'"+f+"',sans-serif"]);
+[FN.slice(0,47),FN.slice(47)].forEach(a=>{const l=document.createElement("link");l.rel="stylesheet";l.href="https://fonts.googleapis.com/css2?"+a.map(n=>"family="+n.replace(/ /g,"+")).join("&")+"&display=swap";document.head.appendChild(l)});
+const hx=(h,s,l)=>{s/=100;l/=100;const a=s*Math.min(l,1-l),f=n=>{const k=(n+h/30)%12,c=l-a*Math.max(-1,Math.min(k-3,9-k,1));return Math.round(255*c).toString(16).padStart(2,"0")};return"#"+f(0)+f(8)+f(4)};
+const CT=[["Birthday",280],["Shadi",350],["Anniversary",190],["Mundan",28],["Naamkaran / Baby",170],["Diwali",38],["Holi",320],["Eid",150],["Rakhi",12],["Thank you / Badhai",220]];
+const DS=["none","conf","dots","star","band","stripe","rays","circ","wave","check"],BS=["orn","single","double","dots","dash","round"];
+const TP=[];
+CT.forEach(([n,h],c)=>{for(let i=0;i<100;i++){const p=i%10,H=(h+p*36)%360,dk=p%2==0;
+ TP.push({n:n+" "+(i+1),bg:dk?[hx(H,55,22),hx((H+15)%360,60,12)]:[hx(H,80,95),hx((H+15)%360,75,86)],ac:dk?hx((H+40)%360,85,68):hx(H,70,36),tx:dk?hx(H,40,94):hx(H,55,16),d:DS[i/10|0],b:BS[(i+c)%6],c})}});
+const CAT=CT.map(c=>c[0]),GL={};
+const GOD=[["ganesh","Ganesh","Shri Ganeshaya Namah","\u{1F549}\uFE0F",25],["shiv","Shiv","Om Namah Shivaya","\u{1F531}",220],["krishna","Krishna","Hare Krishna","\u{1F99A}",215],["ram","Ram","Jai Shri Ram","\u{1F3F9}",30],["hanuman","Hanuman","Jai Hanuman","\u{1F64F}",10],["durga","Durga Mata","Jai Mata Di","\u{1F33A}",355],["lakshmi","Lakshmi","Shri Lakshmi Namah","\u{1FAB7}",45],["saraswati","Saraswati","Jai Maa Saraswati","\u{1F9A2}",200],["vishnu","Vishnu","Om Namo Narayanaya","\u{1F41A}",225],["sai","Sai Baba","Om Sai Ram","\u{1FA94}",40],["nanak","Guru Nanak","Ik Onkar, Waheguru","\u{1F64F}",28],["mahavir","Mahavir","Jai Jinendra","\u5350",55],["buddha","Buddha","Om Mani Padme Hum","\u2638\uFE0F",38]];
+GOD.forEach(([k,n,m,gl,h])=>{GL[k]=gl;const c=CAT.push("Bhagwan: "+n)-1;
+ for(let i=0;i<10;i++){const H=(h+(i>>1)*10)%360,dk=i%2==0;
+  TP.push({n:n+" "+(i+1),bg:dk?[hx(H,60,20),hx((H+12)%360,65,11)]:[hx(H,85,95),hx((H+12)%360,80,86)],ac:dk?hx((H+35)%360,85,66):hx(H,75,36),tx:dk?hx(H,40,94):hx(H,60,15),d:DS[i],b:BS[i%6],g:k,m,c})}});
+{const c=CAT.push("Saada Page")-1;
+ ["#ffffff","#fffdf7","#f8f5ec","#f1f5f9","#fff1f2","#fefce8","#ecfdf5","#eff6ff","#faf5ff","#fff7ed","#f5f5f4","#e0f2fe","#fce7f3","#dcfce7","#fef9c3"].forEach((b,i)=>[0,1].forEach(j=>TP.push({n:"Saada "+(i*2+j+1),bg:[b,b],ac:"#334155",tx:"#111827",d:"none",b:j?"single":"none",c})))}
+const GI={};
+function godImg(k){
+ if(GI[k]!==undefined)return GI[k]||null;
+ GI[k]=null;const im=new Image(),ex=["jpg","png"];let n=0;
+ im.onload=()=>{GI[k]=im;draw();if(!$("pDes").hidden)gal()};
+ im.onerror=()=>{if(++n<ex.length)im.src="bhagwan/"+k+"."+ex[n];else GI[k]=false};
+ im.src="bhagwan/"+k+".jpg";return null;
+}
+const BL=[["head","Heading",56],["name","Naam",104],["msg","Sandesh",46],["info","Tarikh / Jagah",42],["from","Bhejne wale",42]];
+
+function gen(o,a){
+ const nm=a.n2?a.n1+" & "+a.n2:a.n1;
+ const info=[a.d&&"Tarikh: "+a.d,a.p&&"Sthan: "+a.p].filter(Boolean).join("\n");
+ const D={
+  birthday:[0,"Happy Birthday",a.n1,"Aapki zindagi mein hamesha khushiyan aur safalta bani rahe.",info,"Shubhkamnayein: "+a.f],
+  shaadi:[1,"Shubh Vivah",nm,"Hamare vivah samaroh mein sapariwar padharkar hamein aashirwad dene ka hardik nimantran hai.",info,"Nimantrak: "+a.f],
+  anniversary:[2,"Happy Anniversary",nm,"Aapka saath yunhi mehakta rahe aur pyaar din-ba-din badhta rahe.",info,"Shubhkamnayein: "+a.f],
+  mundan:[3,"Mundan Sanskar",a.n1,"Hamare laadle ke mundan sanskar mein aapki upasthiti ke liye hardik nimantran hai.",info,"Nimantrak: "+a.f],
+  other:[9,"Shubhkamnayein",a.n1,"Aapko dher saari shubhkamnayein.",info,a.f&&"Se: "+a.f]
+ }[o];
+ const v={};BL.forEach(([k],i)=>v[k]=(D[i+1]||"").replace(/(: |^Se: )$/,""));
+ if(!a.f)v.from="";
+ return{tpl:D[0],v};
+}
+
+const st={tpl:0,font:FONTS.findIndex(f=>f[0]=="Noto Serif Devanagari"),c:{},s:{},f:{},img:null,v:{},pg:null,bd:{s:"tpl",c:"",w:6,m:50},dz:"tpl"};
+Object.assign(st,gen("shaadi",{n1:"Rahul",n2:"Priya",d:"12 December 2026",p:"Shubh Hall, Delhi",f:"Sharma Parivar"}));st.tpl*=100;
+const resetDes=()=>{st.pg=null;st.bd={s:"tpl",c:"",w:6,m:50};st.dz="tpl"};
+const lum=h=>{const n=parseInt(h.slice(1),16);return .299*(n>>16)+.587*(n>>8&255)+.114*(n&255)};
+const txc=T=>st.pg?(lum(st.pg)>140?"#1a1a1a":"#ffffff"):T.tx;
+const isB=k=>{const f=st.f[k]||{};return f.b===undefined?(k=="name"||k=="head"):f.b};
+
+function rnd(s){return()=>(s=s*16807%2147483647)/2147483647}
+function design(x,T){
+ const dz=st.dz=="tpl"?T.d:st.dz,r=rnd(7);
+ x.fillStyle=T.ac;
+ if(dz=="conf")for(let i=0;i<70;i++){x.globalAlpha=.5;x.fillStyle=i%2?T.ac:"#fff";x.beginPath();x.arc(r()*1080,r()*1350,6+r()*12,0,7);x.fill()}
+ if(dz=="dots"){x.globalAlpha=.15;for(let i=30;i<1080;i+=60)for(let j=30;j<1350;j+=60){x.beginPath();x.arc(i,j,6,0,7);x.fill()}}
+ if(dz=="star"){x.globalAlpha=.6;for(let i=0;i<40;i++){const z=8+r()*14;x.save();x.translate(r()*1080,r()*1350);x.rotate(Math.PI/4);x.fillRect(-z/2,-z/2,z,z);x.restore()}}
+ if(dz=="stripe"){x.globalAlpha=.12;x.strokeStyle=T.ac;x.lineWidth=18;for(let i=-1400;i<1400;i+=60){x.beginPath();x.moveTo(i,0);x.lineTo(i+1350,1350);x.stroke()}}
+ if(dz=="rays"){x.globalAlpha=.12;for(let i=0;i<24;i+=2){const a=i*Math.PI/24,b=(i+1)*Math.PI/24;x.beginPath();x.moveTo(540,0);x.lineTo(540+1800*Math.cos(a),1800*Math.sin(a));x.lineTo(540+1800*Math.cos(b),1800*Math.sin(b));x.fill()}}
+ if(dz=="circ"){x.globalAlpha=.14;[[100,150,230],[980,1200,300],[900,120,120],[120,1180,140]].forEach(([a,b,q])=>{x.beginPath();x.arc(a,b,q,0,7);x.fill()})}
+ if(dz=="wave"){x.globalAlpha=.18;for(let k=0;k<3;k++){x.beginPath();x.moveTo(0,1350);for(let i=0;i<=1080;i+=20)x.lineTo(i,1180-k*70+Math.sin(i/90+k)*34);x.lineTo(1080,1350);x.fill()}}
+ if(dz=="check"){x.globalAlpha=.1;for(let i=0;i<1080;i+=90)for(let j=0;j<1350;j+=90)if((i+j)/90%2==0)x.fillRect(i,j,90,90)}
+ if(dz=="band"){x.globalAlpha=.9;x.fillRect(0,0,1080,28);x.fillRect(0,1322,1080,28)}
+ x.globalAlpha=1;
+}
+function border(x,T){
+ const b=st.bd,s=b.s=="tpl"?T.b:b.s;
+ if(s=="none")return;
+ const m=b.m,w=b.w,R=(o,l)=>{x.lineWidth=l;x.strokeRect(o,o,1080-2*o,1350-2*o)};
+ x.strokeStyle=x.fillStyle=b.c||T.ac;
+ x.setLineDash(s=="dots"?[1,w*2.2]:s=="dash"?[w*3,w*2]:[]);x.lineCap=s=="dots"?"round":"butt";
+ s=="round"?(x.lineWidth=w,x.beginPath(),x.roundRect(m,m,1080-2*m,1350-2*m,60),x.stroke()):R(m,w);x.setLineDash([]);x.lineCap="butt";
+ if(s=="double")R(m+w*2.5,Math.max(2,w/3));
+ if(s=="orn"){const o=m+24;R(o,2);[o,1080-o].forEach(a=>[o,1350-o].forEach(c=>{x.save();x.translate(a,c);x.rotate(Math.PI/4);x.fillRect(-14,-14,28,28);x.restore()}))}
+}
+function wrap(x,t,w){const o=[];t.split("\n").forEach(p=>{let l="";p.split(" ").forEach(wd=>{const n=l?l+" "+wd:wd;if(l&&x.measureText(n).width>w){o.push(l);l=wd}else l=n});o.push(l)});return o}
+
+function draw(){paint($("cv").getContext("2d"),TP[st.tpl],0)}
+function paint(x,T,th){
+ const F=FONTS[st.font][1],o=[st.pg,st.bd,st.dz,st.c];
+ if(th){st.pg=null;st.bd={s:"tpl",c:"",w:6,m:50};st.dz="tpl";st.c={}}
+ if(st.pg)x.fillStyle=st.pg;else{const g=x.createLinearGradient(0,0,0,1350);g.addColorStop(0,T.bg[0]);g.addColorStop(1,T.bg[1]);x.fillStyle=g}
+ x.fillRect(0,0,1080,1350);design(x,T);border(x,T);
+ let top=130;
+ const im=st.img||(T.g?godImg(T.g):null);
+ if(im||T.g){const r=T.g?210:170,cx=540,cy=T.g?340:330;
+  x.save();x.beginPath();x.arc(cx,cy,r,0,7);x.clip();
+  if(im){const s=Math.max(2*r/im.width,2*r/im.height);x.drawImage(im,cx-im.width*s/2,cy-im.height*s/2,im.width*s,im.height*s)}
+  else{x.fillStyle=T.ac;x.globalAlpha=.18;x.fillRect(cx-r,cy-r,2*r,2*r);x.globalAlpha=1;x.font="190px 'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillStyle=T.ac;x.fillText(GL[T.g],cx,cy+10)}
+  x.restore();x.strokeStyle=T.ac;x.lineWidth=8;x.beginPath();x.arc(cx,cy,r+8,0,7);x.stroke();top=T.g?600:540}
+ x.textBaseline="top";
+ const bl=[];let h=0;
+ BL.forEach(([k,,d])=>{const t=(st.v[k]||"").trim();if(!t)return;
+  const f=st.f[k]||{},z=st.s[k]||d,ff=f.ff>=0?FONTS[f.ff][1]:F;
+  x.font=(f.i?"italic ":"")+(isB(k)?"600 ":"400 ")+z+"px "+ff;
+  const ln=wrap(x,t,860),lh=z*1.3,a=f.a||"center";
+  bl.push({k,ln,lh,z,a,u:f.u,ax:a=="left"?110:a=="right"?970:540,f:x.font});h+=ln.length*lh+36});
+ let y=Math.max(top,top+(1230-top-h)/2);
+ bl.forEach(b=>{x.font=b.f;x.textAlign=b.a;x.fillStyle=st.c[b.k]||(b.k=="head"?T.ac:txc(T));
+  b.ln.forEach(l=>{x.fillText(l,b.ax,y);
+   if(b.u){const w=x.measureText(l).width;x.fillRect(b.a=="left"?b.ax:b.a=="right"?b.ax-w:b.ax-w/2,y+b.z*1.1,w,Math.max(2,b.z/18))}
+   y+=b.lh});y+=36});
+ [st.pg,st.bd,st.dz,st.c]=o;
+}
+
+function makePdf(jpg,w,h){
+ const e=new TextEncoder(),P=[],O=[];let L=0;
+ const add=x=>{const b=typeof x=="string"?e.encode(x):x;P.push(b);L+=b.length};
+ const ob=(n,f)=>{O[n]=L;add(n+" 0 obj\n");f();add("\nendobj\n")};
+ const PW=432,PH=540,c="q "+PW+" 0 0 "+PH+" 0 0 cm /Im0 Do Q";
+ add("%PDF-1.4\n");
+ ob(1,()=>add("<</Type/Catalog/Pages 2 0 R>>"));
+ ob(2,()=>add("<</Type/Pages/Kids[3 0 R]/Count 1>>"));
+ ob(3,()=>add("<</Type/Page/Parent 2 0 R/MediaBox[0 0 "+PW+" "+PH+"]/Resources<</XObject<</Im0 4 0 R>>>>/Contents 5 0 R>>"));
+ ob(4,()=>{add("<</Type/XObject/Subtype/Image/Width "+w+"/Height "+h+"/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length "+jpg.length+">>\nstream\n");add(jpg);add("\nendstream")});
+ ob(5,()=>add("<</Length "+c.length+">>\nstream\n"+c+"\nendstream"));
+ const xr=L;add("xref\n0 6\n0000000000 65535 f \n");
+ for(let i=1;i<=5;i++)add(String(O[i]).padStart(10,"0")+" 00000 n \n");
+ add("trailer\n<</Size 6/Root 1 0 R>>\nstartxref\n"+xr+"\n%%EOF");
+ return new Blob(P,{type:"application/pdf"});
+}
+function save(b,n){const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=n;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
+
+// ---- UI ----
+const FO='<option value="-1">Card wala font</option>'+FONTS.map((f,i)=>`<option value="${i}">${f[0]}</option>`).join("");
+const AL={l:"left",c:"center",r:"right"};
+$("blk").innerHTML=BL.map(([k,l,d])=>`<div class="blk"><label for="v_${k}">${l}</label><textarea id="v_${k}" rows="2"></textarea>
+<div class="row tb" data-k="${k}"><button type="button" data-a="b" aria-label="Bold"><b>B</b></button><button type="button" data-a="i" aria-label="Italic"><i>I</i></button><button type="button" data-a="u" aria-label="Underline"><u>U</u></button><button type="button" data-a="l" aria-label="Left">L</button><button type="button" data-a="c" aria-label="Center">C</button><button type="button" data-a="r" aria-label="Right">R</button><select id="f_${k}" aria-label="${l} ka font">${FO}</select></div>
+<div class="row"><label>Rang <input type="color" id="c_${k}" value="#000000"></label><label>Size <input type="range" id="s_${k}" min="20" max="140" value="${d}"></label></div></div>`).join("");
+$("font").innerHTML=FONTS.map((f,i)=>`<option value="${i}">${f[0]}</option>`).join("");
+
+function sync(){
+ const T=TP[st.tpl];
+ document.querySelectorAll("#tp button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.i==st.tpl));
+ BL.forEach(([k,,d])=>{const f=st.f[k]||{},a=f.a||"center";
+  $("v_"+k).value=st.v[k]||"";$("c_"+k).value=st.c[k]||(k=="head"?T.ac:txc(T));$("s_"+k).value=st.s[k]||d;$("f_"+k).value=f.ff>=0?f.ff:-1;
+  document.querySelectorAll(`[data-k=${k}] button`).forEach(b=>{const q=b.dataset.a;b.setAttribute("aria-pressed",q=="b"?isB(k):q=="i"?!!f.i:q=="u"?!!f.u:AL[q]==a)})});
+ $("font").value=st.font;$("pgc").value=st.pg||T.bg[0];$("bs").value=st.bd.s;$("bc").value=st.bd.c||T.ac;$("bw").value=st.bd.w;$("bm").value=st.bd.m;$("dz").value=st.dz;
+}
+function loadFont(i){const n=i>=0?i:st.font;document.fonts.load("40px "+FONTS[n][1].split(",")[0],"\u0905Aa").then(()=>{draw();if(!$("pDes").hidden)gal()}).catch(()=>{})}
+
+BL.forEach(([k])=>{
+ $("v_"+k).addEventListener("input",e=>{st.v[k]=e.target.value;draw()});
+ $("c_"+k).addEventListener("input",e=>{st.c[k]=e.target.value;draw()});
+ $("s_"+k).addEventListener("input",e=>{st.s[k]=+e.target.value;draw()});
+ $("f_"+k).addEventListener("change",e=>{(st.f[k]=st.f[k]||{}).ff=+e.target.value;draw();loadFont(+e.target.value)});
+});
+$("blk").addEventListener("click",e=>{
+ const b=e.target.closest("button[data-a]");if(!b)return;
+ const k=b.parentNode.dataset.k,f=st.f[k]=st.f[k]||{},a=b.dataset.a;
+ if(a=="b")f.b=!isB(k);else if(a=="i"||a=="u")f[a]=!f[a];else f.a=AL[a];
+ sync();draw();
+});
+let cat=-1,pgi=0;const PP=12;
+function gal(){
+ const L=[];TP.forEach((t,i)=>{if(cat<0||t.c==cat)L.push(i)});
+ const n=Math.ceil(L.length/PP);pgi=Math.max(0,Math.min(pgi,n-1));
+ const g=$("tp");g.innerHTML="";
+ L.slice(pgi*PP,pgi*PP+PP).forEach(i=>{
+  const b=document.createElement("button"),c=document.createElement("canvas");
+  b.type="button";b.dataset.i=i;b.title=TP[i].n;b.setAttribute("aria-label",TP[i].n);b.setAttribute("aria-pressed",i==st.tpl);
+  c.width=108;c.height=135;b.appendChild(c);g.appendChild(b);
+  const x=c.getContext("2d");x.setTransform(.1,0,0,.1,0,0);paint(x,TP[i],1);
+ });
+ $("pn").textContent=(pgi+1)+" / "+n+"  ("+L.length+" template)";
+}
+$("tc").innerHTML=`<option value="-1">Sab (${TP.length})</option>`+CAT.map((n,i)=>`<option value="${i}">${n} (${TP.filter(t=>t.c==i).length})</option>`).join("");
+$("tc").onchange=e=>{cat=+e.target.value;pgi=0;gal()};
+$("tpv").onclick=()=>{pgi--;gal()};
+$("tnx").onclick=()=>{pgi++;gal()};
+$("tp").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st.tpl=+b.dataset.i;st.c={};resetDes();if(TP[st.tpl].m)st.v.head=TP[st.tpl].m;sync();draw()});
+$("pgc").addEventListener("input",e=>{st.pg=e.target.value;sync();draw()});
+$("pgr").onclick=()=>{st.pg=null;sync();draw()};
+$("bs").onchange=e=>{st.bd.s=e.target.value;draw()};
+$("bc").oninput=e=>{st.bd.c=e.target.value;draw()};
+$("bw").oninput=e=>{st.bd.w=+e.target.value;draw()};
+$("bm").oninput=e=>{st.bd.m=+e.target.value;draw()};
+$("dz").onchange=e=>{st.dz=e.target.value;draw()};
+$("font").addEventListener("change",e=>{st.font=+e.target.value;draw();loadFont(-1)});
+$("photo").addEventListener("change",e=>{
+ const f=e.target.files[0];if(!f)return;
+ const im=new Image();im.onload=()=>{st.img=im;draw()};im.src=URL.createObjectURL(f);
+});
+$("noPhoto").addEventListener("click",()=>{st.img=null;$("photo").value="";draw()});
+
+function tab(n){["Man","Des","Auto"].forEach(t=>{$("p"+t).hidden=t!=n;$("t"+t).setAttribute("aria-pressed",t==n)});if(n=="Des")gal()}
+["Man","Des","Auto"].forEach(t=>{$("t"+t).onclick=()=>tab(t)});
+
+$("pAuto").addEventListener("submit",e=>{
+ e.preventDefault();
+ const dv=$("a_d").value;
+ const d=dv?new Date(dv).toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"}):"";
+ const r=gen($("a_o").value,{n1:$("a_1").value.trim(),n2:$("a_2").value.trim(),d,p:$("a_p").value.trim(),f:$("a_f").value.trim()});
+ st.tpl=r.tpl*100+Math.floor(Math.random()*100);cat=st.tpl/100|0;pgi=Math.floor(st.tpl%100/PP);$("tc").value=cat;st.v=r.v;st.c={};st.s={};st.f={};resetDes();
+ sync();draw();tab("Man");
+});
+
+$("png").onclick=()=>$("cv").toBlob(b=>save(b,"card.png"));
+$("pdf").onclick=()=>{
+ const bin=atob($("cv").toDataURL("image/jpeg",.95).split(",")[1]);
+ save(makePdf(Uint8Array.from(bin,c=>c.charCodeAt(0)),1080,1350),"card.pdf");
+};
+
+sync();draw();
+loadFont(-1);
+</script>
+</body>
+</html>

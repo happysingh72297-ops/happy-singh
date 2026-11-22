@@ -4,7 +4,7 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth
 
 // ====== script.js wali wahi values yahan paste karein ======
 const firebaseConfig = {
-   apiKey: "AIzaSyA8kmNVPwfCh0Ya-exylf0ef1KiV9uJVqI",
+    apiKey: "AIzaSyA8kmNVPwfCh0Ya-exylf0ef1KiV9uJVqI",
     authDomain: "happy--singh.firebaseapp.com",
     projectId: "happy--singh",
     storageBucket: "happy--singh.firebasestorage.app",
